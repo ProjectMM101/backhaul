@@ -117,17 +117,50 @@ let mapInstance = null;
 let mapMarkers  = [];
 let mapReady    = false;
 let isFullscreen = false;
+let portWatchData = {};
+
+function buildPortWatchLookup(pw) {
+  portWatchData = {};
+  if (!pw || !pw.ports || !pw.ports.length) return;
+  pw.ports.forEach(p => {
+    portWatchData[p.portname.toLowerCase()] = p;
+  });
+}
+
+function findPortWatchEntry(portName) {
+  if (!portName) return null;
+  const q = portName.toLowerCase();
+  if (portWatchData[q]) return portWatchData[q];
+  // partial match — handles "Nhava Sheva" vs "Mumbai", "Shenzhen" vs "Yantian" etc.
+  for (const [key, val] of Object.entries(portWatchData)) {
+    if (q.includes(key) || key.includes(q)) return val;
+  }
+  return null;
+}
 
 function buildPopup(p) {
-  return `<div class="popup-port">${p.port}</div>
+  const live = findPortWatchEntry(p.port);
+  const hasLive = live && live.avg_container_calls_14d !== null;
+
+  const liveSection = hasLive ? `
+    <div class="popup-live">
+      <div class="popup-live-label">📡 Live — IMF PortWatch (14-day avg)</div>
+      <div class="popup-stat"><b>Container calls/day:</b> ${live.avg_container_calls_14d.toFixed(1)}</div>
+      ${live.avg_imports_14d  ? `<div class="popup-stat"><b>Imports TEU/day:</b> ${live.avg_imports_14d.toLocaleString()}</div>`  : ''}
+      ${live.avg_exports_14d  ? `<div class="popup-stat"><b>Exports TEU/day:</b> ${live.avg_exports_14d.toLocaleString()}</div>`  : ''}
+      <div class="popup-stat"><b>Activity trend:</b> ${live.trend_vs_prior_14d || '—'}</div>
+    </div>` : '';
+
+  return `<div class="popup-port">${p.port}${hasLive ? ' <span class="popup-live-dot" title="Live data available">●</span>' : ''}</div>
     <div class="popup-country">${p.country}</div>
     ${badge(p.status)}
     <div style="margin-top:8px">
       <div class="popup-stat"><b>Dwell time:</b> ${p.dwell_days !== null ? p.dwell_days + ' days' : 'Not publicly reported'}</div>
       <div class="popup-stat"><b>Monthly volume:</b> ${p.monthly_teu_thousands ? '~' + p.monthly_teu_thousands.toLocaleString() + 'k TEU' : '—'}</div>
-      <div class="popup-stat"><b>Trend:</b> ${p.trend ? p.trend.charAt(0).toUpperCase() + p.trend.slice(1) : '—'}</div>
+      <div class="popup-stat"><b>Market trend:</b> ${p.trend ? p.trend.charAt(0).toUpperCase() + p.trend.slice(1) : '—'}</div>
       <div class="popup-stat"><b>Data quality:</b> ${p.data_quality || 'estimated'}</div>
     </div>
+    ${liveSection}
     ${p.note ? `<div class="popup-note">${p.note}</div>` : ''}`;
 }
 
@@ -615,6 +648,7 @@ async function init() {
     renderRoutes(routes);
     renderLiveFeed(portwatch);
     renderGlossary();
+    buildPortWatchLookup(portwatch);
     initTabs({ ports, teu, routes });
     initAI();
     setStatus([ports.updated, teu.updated, routes.updated, portwatch.updated]);
