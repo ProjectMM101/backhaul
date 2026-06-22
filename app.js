@@ -161,23 +161,24 @@ function buildPopup(p) {
       <div class="popup-stat"><b>Data quality:</b> ${p.data_quality || 'estimated'}</div>
     </div>
     ${liveSection}
-    ${p.note ? `<div class="popup-note">${p.note}</div>` : ''}`;
-}
+    ${p.note ? `<div class="popup-note">${p.note}</div>` : ''}
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
+      <a href="https://www.marinetraffic.com/en/ais/index/ports/all/?name=${encodeURIComponent(p.port)}" target="_blank" rel="noopener" class="popup-mt-link">View on MarineTraffic →</a>
+    </div>`;
 
 function initMap(ports) {
   mapInstance = L.map('port-map', {
     zoomControl: true,
-    minZoom: 1.8,
+    minZoom: 1.5,
     maxZoom: 18,
-    maxBounds: [[-85, -180], [85, 180]],
-    maxBoundsViscosity: 1.0,
-    worldCopyJump: false,
+    worldCopyJump: true,           // markers jump to closest copy when wrapping
+    maxBounds: [[-85, -1800], [85, 1800]], // wide lon range = globe spin, lat capped
+    maxBoundsViscosity: 0.4,       // soft polar boundary, not hard stop
   }).setView([20, 10], 2);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd', maxZoom: 18, noWrap: true,
-    bounds: [[-90, -180], [90, 180]],
+    subdomains: 'abcd', maxZoom: 18,  // no noWrap — tiles repeat = globe feel
   }).addTo(mapInstance);
 
   ports.forEach(p => {
@@ -187,14 +188,17 @@ function initMap(ports) {
       ? Math.max(6, Math.min(20, 4 + Math.log(p.monthly_teu_thousands) * 2))
       : 7;
     const m = L.circleMarker([p.lat, p.lng], { radius, fillColor: color, color: '#0D1B24', weight: 2, opacity: 1, fillOpacity: 0.85 });
-    m.bindPopup(buildPopup(p), { maxWidth: 280 });
+    m.bindPopup(buildPopup(p), { maxWidth: 300 });
     m.portName = p.port.toLowerCase();
+    m.portData = p;
     m.lat = p.lat;
     m.lng = p.lng;
+    m.statusKey = p.status;
     m.addTo(mapInstance);
     mapMarkers.push(m);
   });
 
+  createMapSidePanel(ports);
   setupMapSearch();
   setupFullscreen();
 }
@@ -623,6 +627,258 @@ function initAI() {
   });
 }
 
+// ═══ MAP SIDE PANEL + LAYERS ════════════════════════════════════════════════
+
+let layerVisible = { surplus:true, deficit:true, balanced:true, tightening:true, disrupted:true, ships:false, worldports:false };
+let aisSocket = null;
+let shipMarkers = {};
+let worldPortLayer = null;
+let allTimestamps = {};
+
+function ageBadge(isoStr) {
+  if (!isoStr) return '<span class="fresh-badge fresh-unknown">unknown</span>';
+  const days = (Date.now() - new Date(isoStr).getTime()) / 86400000;
+  const cls   = days < 1 ? 'fresh-new' : days < 7 ? 'fresh-ok' : days < 60 ? 'fresh-old' : 'fresh-stale';
+  const label = days < 1 ? 'today' : days < 2 ? 'yesterday' : Math.floor(days) + ' days ago';
+  return `<span class="fresh-badge ${cls}">${label}</span>`;
+}
+
+function createMapSidePanel() {
+  // Panel element
+  const panel = document.createElement('div');
+  panel.id = 'map-panel';
+  panel.className = 'map-panel';
+  panel.innerHTML = `
+    <div class="mp-header">
+      <span>Map Layers</span>
+      <button id="mp-close" class="mp-close" title="Close panel">×</button>
+    </div>
+
+    <div class="mp-section">
+      <div class="mp-section-title">Ports by status</div>
+      ${Object.entries(STATUS_LABEL).map(([key, label]) => `
+        <label class="mp-toggle">
+          <input type="checkbox" class="layer-chk" data-status="${key}" checked>
+          <span class="mp-dot" style="background:${STATUS_COLOR[key]}"></span>
+          ${label}
+        </label>`).join('')}
+    </div>
+
+    <div class="mp-section">
+      <div class="mp-section-title">Live ships (AIS)</div>
+      <label class="mp-toggle">
+        <input type="checkbox" id="ships-chk"> Show ships in view
+      </label>
+      <div class="ais-setup-wrap" id="ais-setup-wrap">
+        <input type="password" id="ais-key" class="mp-input"
+               placeholder="AISStream.io API key"
+               value="${localStorage.getItem('bh_ais_key') || ''}">
+        <button id="ais-save" class="mp-btn">Save key</button>
+        <p class="mp-hint">Free key: <a href="https://aisstream.io" target="_blank" rel="noopener">aisstream.io</a>
+          &nbsp;·&nbsp; Shows vessels in current map view</p>
+        <p class="mp-hint" style="color:var(--muted);margin-top:4px">MarineTraffic API: $500+/mo — use the link in each port popup instead</p>
+      </div>
+      <div id="ais-status" class="ais-status"></div>
+    </div>
+
+    <div class="mp-section">
+      <div class="mp-section-title">World ports</div>
+      <label class="mp-toggle">
+        <input type="checkbox" id="worldports-chk"> All 3,700+ ports (WPI)
+      </label>
+      <p class="mp-hint" id="wpi-status">World Port Index — free public dataset</p>
+    </div>
+
+    <div class="mp-section">
+      <div class="mp-section-title">Data freshness</div>
+      <div id="freshness-list"></div>
+    </div>
+  `;
+
+  // Toggle button
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = 'panel-toggle-btn';
+  toggleBtn.className = 'panel-toggle-btn';
+  toggleBtn.innerHTML = '☰ Layers';
+  toggleBtn.title = 'Toggle map layers panel';
+
+  const mapSection = document.getElementById('tab-map');
+  mapSection.appendChild(panel);
+  mapSection.appendChild(toggleBtn);
+
+  // Open/close
+  toggleBtn.addEventListener('click', () => {
+    panel.classList.toggle('mp-open');
+    toggleBtn.classList.toggle('mp-panel-open');
+  });
+  document.getElementById('mp-close').addEventListener('click', () => {
+    panel.classList.remove('mp-open');
+    toggleBtn.classList.remove('mp-panel-open');
+  });
+
+  // Port status layer toggles
+  panel.querySelectorAll('.layer-chk').forEach(chk => {
+    chk.addEventListener('change', () => {
+      const status = chk.dataset.status;
+      layerVisible[status] = chk.checked;
+      mapMarkers.forEach(m => {
+        if (m.statusKey === status) {
+          chk.checked ? m.addTo(mapInstance) : m.remove();
+        }
+      });
+    });
+  });
+
+  // Ships toggle
+  document.getElementById('ships-chk').addEventListener('change', e => {
+    layerVisible.ships = e.target.checked;
+    if (e.target.checked) {
+      const key = localStorage.getItem('bh_ais_key');
+      if (key) connectAIS(key);
+      else document.getElementById('ais-status').textContent = 'Enter an API key above first.';
+    } else {
+      disconnectAIS();
+    }
+  });
+
+  // AIS key save
+  document.getElementById('ais-save').addEventListener('click', () => {
+    const key = document.getElementById('ais-key').value.trim();
+    if (!key) return;
+    localStorage.setItem('bh_ais_key', key);
+    document.getElementById('ais-status').textContent = 'Key saved. Toggle ships on to connect.';
+  });
+
+  // World ports toggle
+  document.getElementById('worldports-chk').addEventListener('change', e => {
+    if (e.target.checked) loadWorldPorts();
+    else if (worldPortLayer) { worldPortLayer.clearLayers(); }
+  });
+
+  // Freshness
+  renderFreshness();
+}
+
+function renderFreshness() {
+  const list = document.getElementById('freshness-list');
+  if (!list) return;
+  const sources = [
+    { label: 'Port status & dwell',   ts: allTimestamps.ports },
+    { label: 'IMF PortWatch (ships)', ts: allTimestamps.portwatch },
+    { label: 'World Bank TEU',         ts: allTimestamps.teu },
+    { label: 'Routes & margins',       ts: allTimestamps.routes },
+  ];
+  list.innerHTML = sources.map(s =>
+    `<div class="fresh-row"><span class="fresh-label">${s.label}</span>${ageBadge(s.ts)}</div>`
+  ).join('');
+}
+
+// ═══ AIS SHIPS (AISStream.io) ════════════════════════════════════════════════
+
+function connectAIS(apiKey) {
+  disconnectAIS();
+  const statusEl = document.getElementById('ais-status');
+  statusEl.textContent = 'Connecting…';
+
+  aisSocket = new WebSocket('wss://stream.aisstream.io/v0/stream');
+
+  aisSocket.onopen = () => {
+    const bounds = mapInstance.getBounds();
+    aisSocket.send(JSON.stringify({
+      APIKey: apiKey,
+      BoundingBoxes: [[[bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]]],
+      FilterMessageTypes: ['PositionReport'],
+    }));
+    statusEl.textContent = '● Connected — showing vessels in view';
+    statusEl.style.color = 'var(--teal)';
+
+    // Update subscription when map moves
+    mapInstance.on('moveend', () => {
+      if (aisSocket && aisSocket.readyState === WebSocket.OPEN) {
+        const b = mapInstance.getBounds();
+        aisSocket.send(JSON.stringify({
+          APIKey: apiKey,
+          BoundingBoxes: [[[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]]],
+          FilterMessageTypes: ['PositionReport'],
+        }));
+      }
+    });
+  };
+
+  aisSocket.onmessage = (msg) => {
+    try {
+      const data = JSON.parse(msg.data);
+      const pos  = data?.Message?.PositionReport;
+      if (!pos) return;
+      const { UserID: mmsi, Latitude: lat, Longitude: lng, Sog: speed, Cog: course } = pos;
+      if (!lat || !lng) return;
+
+      if (shipMarkers[mmsi]) {
+        shipMarkers[mmsi].setLatLng([lat, lng]);
+      } else {
+        const m = L.circleMarker([lat, lng], {
+          radius: 3, fillColor: '#4FB6AC', color: '#0D1B24',
+          weight: 1, opacity: 1, fillOpacity: 0.9,
+        });
+        m.bindPopup(`<b>MMSI:</b> ${mmsi}<br><b>Speed:</b> ${speed ? speed.toFixed(1) + ' kn' : '—'}<br><b>Course:</b> ${course ? Math.round(course) + '°' : '—'}<br><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:${mmsi}" target="_blank" rel="noopener" style="color:var(--teal)">View on MarineTraffic →</a>`);
+        m.addTo(mapInstance);
+        shipMarkers[mmsi] = m;
+      }
+    } catch {/* ignore parse errors */}
+  };
+
+  aisSocket.onerror = () => { statusEl.textContent = 'Connection error — check API key.'; statusEl.style.color = 'var(--red)'; };
+  aisSocket.onclose = () => { if (layerVisible.ships) statusEl.textContent = 'Disconnected.'; };
+}
+
+function disconnectAIS() {
+  if (aisSocket) { aisSocket.close(); aisSocket = null; }
+  Object.values(shipMarkers).forEach(m => m.remove());
+  shipMarkers = {};
+  const s = document.getElementById('ais-status');
+  if (s) { s.textContent = ''; s.style.color = ''; }
+}
+
+// ═══ WORLD PORT INDEX (ALL PORTS) ════════════════════════════════════════════
+
+async function loadWorldPorts() {
+  const statusEl = document.getElementById('wpi-status');
+  statusEl.textContent = 'Loading 3,700+ ports…';
+
+  try {
+    const url = 'https://services9.arcgis.com/j1CY4yzWfwptbTWN/arcgis/rest/services/WorldPortIndex_WFL1/FeatureServer/0/query'
+      + '?where=1%3D1&outFields=PORT_NAME%2CCOUNTRY%2CHARBORSIZE&geometryPrecision=4&outSR=4326&f=geojson&resultRecordCount=5000';
+
+    const res  = await fetch(url);
+    const geoj = await res.json();
+
+    if (!worldPortLayer) {
+      worldPortLayer = L.layerGroup().addTo(mapInstance);
+    } else {
+      worldPortLayer.clearLayers();
+    }
+
+    let count = 0;
+    geoj.features.forEach(f => {
+      const [lng, lat] = f.geometry.coordinates;
+      const p = f.properties;
+      const r = p.HARBORSIZE === 'L' ? 4 : p.HARBORSIZE === 'M' ? 3 : 2;
+      const m = L.circleMarker([lat, lng], {
+        radius: r, fillColor: '#8B9BA8', color: '#0D1B24',
+        weight: 1, opacity: 0.7, fillOpacity: 0.5,
+      });
+      m.bindPopup(`<b>${p.PORT_NAME}</b><br>${p.COUNTRY || '—'}<br>
+        <a href="https://www.marinetraffic.com/en/ais/index/ports/all/?name=${encodeURIComponent(p.PORT_NAME)}" target="_blank" rel="noopener" style="color:var(--teal)">View on MarineTraffic →</a>`);
+      worldPortLayer.addLayer(m);
+      count++;
+    });
+
+    statusEl.textContent = `Loaded ${count.toLocaleString()} ports. Gray dots = WPI. Coloured = tracked.`;
+  } catch (err) {
+    statusEl.textContent = `Failed to load: ${err.message}`;
+  }
+}
+
 // ═══ STATUS BAR ═══════════════════════════════════════════════════════════════
 
 function setStatus(timestamps) {
@@ -643,6 +899,8 @@ async function init() {
       loadJSON('data/routes.json'),
       loadJSON('data/portwatch.json'),
     ]);
+
+    allTimestamps = { ports: ports.updated, teu: teu.updated, routes: routes.updated, portwatch: portwatch.updated };
 
     renderOverview(ports, teu);
     renderRoutes(routes);
