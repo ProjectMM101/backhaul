@@ -1,8 +1,151 @@
 {
-  "updated": "2026-06-21T00:00:00Z",
-  "source": "Container xChange blog, referencing market data from Jul 2024",
-  "snapshot": [
-    { "lane": "Shanghai - Rotterdam", "rate_usd_per_feu": 8056, "date": "2024-07-01", "note": "Spiked due to Red Sea diversions / Cape of Good Hope rerouting" }
-  ],
-  "note": "This is one historical reference point, not a live feed. The Freightos Baltic Index and Drewry World Container Index are the standard public weekly references but don't offer free open APIs — check their sites directly, or budget for a paid API tier if you want this panel live."
+  "source": "Freightos Baltic Index (FBX) via Far Point Global",
+  "as_of": "2026-06-22T00:00:00Z",
+  "note": "Rates per FEU (40ft container). 20ft (TEU) estimated at 55% of FEU rate. THC and fees are estimates — get a real quote before committing.",
+  "routes": [
+    {
+      "fbx_code": "FBX01",
+      "label": "China/East Asia \u2192 US West Coast",
+      "from": "China / East Asia",
+      "to": "US West Coast",
+      "rate_usd_feu": 2418,
+      "transit_days_est": 16,
+      "origin_thc_usd": 220,
+      "dest_thc_usd": 250,
+      "documentation_usd": 75,
+      "other_fees_usd": 150
+    },
+    {
+      "fbx_code": "FBX02",
+      "label": "US West Coast \u2192 China/East Asia",
+      "from": "US West Coast",
+      "to": "China / East Asia",
+      "rate_usd_feu": 300,
+      "transit_days_est": 16,
+      "origin_thc_usd": 250,
+      "dest_thc_usd": 220,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX03",
+      "label": "China/East Asia \u2192 US East Coast",
+      "from": "China / East Asia",
+      "to": "US East Coast",
+      "rate_usd_feu": 3859,
+      "transit_days_est": 28,
+      "origin_thc_usd": 220,
+      "dest_thc_usd": 300,
+      "documentation_usd": 75,
+      "other_fees_usd": 150
+    },
+    {
+      "fbx_code": "FBX04",
+      "label": "US East Coast \u2192 China/East Asia",
+      "from": "US East Coast",
+      "to": "China / East Asia",
+      "rate_usd_feu": 423,
+      "transit_days_est": 28,
+      "origin_thc_usd": 300,
+      "dest_thc_usd": 220,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX11",
+      "label": "China/East Asia \u2192 North Europe",
+      "from": "China / East Asia",
+      "to": "North Europe",
+      "rate_usd_feu": 2779,
+      "transit_days_est": 30,
+      "origin_thc_usd": 220,
+      "dest_thc_usd": 200,
+      "documentation_usd": 75,
+      "other_fees_usd": 120
+    },
+    {
+      "fbx_code": "FBX12",
+      "label": "North Europe \u2192 China/East Asia",
+      "from": "North Europe",
+      "to": "China / East Asia",
+      "rate_usd_feu": 454,
+      "transit_days_est": 30,
+      "origin_thc_usd": 200,
+      "dest_thc_usd": 220,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX13",
+      "label": "China/East Asia \u2192 Mediterranean",
+      "from": "China / East Asia",
+      "to": "Mediterranean",
+      "rate_usd_feu": 4179,
+      "transit_days_est": 26,
+      "origin_thc_usd": 220,
+      "dest_thc_usd": 180,
+      "documentation_usd": 75,
+      "other_fees_usd": 120
+    },
+    {
+      "fbx_code": "FBX14",
+      "label": "Mediterranean \u2192 China/East Asia",
+      "from": "Mediterranean",
+      "to": "China / East Asia",
+      "rate_usd_feu": 530,
+      "transit_days_est": 26,
+      "origin_thc_usd": 180,
+      "dest_thc_usd": 220,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX21",
+      "label": "US East Coast \u2192 North Europe",
+      "from": "US East Coast",
+      "to": "North Europe",
+      "rate_usd_feu": 446,
+      "transit_days_est": 12,
+      "origin_thc_usd": 300,
+      "dest_thc_usd": 200,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX22",
+      "label": "North Europe \u2192 US East Coast",
+      "from": "North Europe",
+      "to": "US East Coast",
+      "rate_usd_feu": 1416,
+      "transit_days_est": 12,
+      "origin_thc_usd": 200,
+      "dest_thc_usd": 300,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX24",
+      "label": "Europe \u2192 South America East Coast",
+      "from": "Europe",
+      "to": "South America East Coast",
+      "rate_usd_feu": 785,
+      "transit_days_est": 14,
+      "origin_thc_usd": 200,
+      "dest_thc_usd": 160,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    },
+    {
+      "fbx_code": "FBX26",
+      "label": "Europe \u2192 South America West Coast",
+      "from": "Europe",
+      "to": "South America West Coast",
+      "rate_usd_feu": 2311,
+      "transit_days_est": 22,
+      "origin_thc_usd": 200,
+      "dest_thc_usd": 140,
+      "documentation_usd": 75,
+      "other_fees_usd": 100
+    }
+  ]
 }
