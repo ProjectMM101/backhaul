@@ -165,6 +165,7 @@ function buildPopup(p) {
     <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
       <a href="https://www.marinetraffic.com/en/ais/index/ports/all/?name=${encodeURIComponent(p.port)}" target="_blank" rel="noopener" class="popup-mt-link">View on MarineTraffic →</a>
     </div>`;
+}
 
 function initMap(ports) {
   mapInstance = L.map('port-map', {
