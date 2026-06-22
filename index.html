@@ -25,6 +25,7 @@
     <button class="tab"        data-tab="map"       role="tab">Port Map</button>
     <button class="tab"        data-tab="routes"    role="tab">Routes</button>
     <button class="tab"        data-tab="live"      role="tab">Live Feed</button>
+    <button class="tab"        data-tab="ai"        role="tab">🤖 AI</button>
     <button class="tab"        data-tab="glossary"  role="tab">Glossary</button>
   </nav>
   <div class="status">
@@ -229,6 +230,56 @@
       </div>
     </div>
     <p class="panel-source" id="live-source"></p>
+  </section>
+
+  <!-- ═══ AI ASSISTANT ══════════════════════════════════════════════════════ -->
+  <section id="tab-ai" class="tab-content" role="tabpanel">
+
+    <!-- Setup screen (shown until API key is saved) -->
+    <div id="ai-setup" class="ai-setup-screen">
+      <div class="ai-setup-card">
+        <div class="ai-setup-icon">🤖</div>
+        <h2>AI Trading Assistant</h2>
+        <p>Get AI-powered route recommendations, margin estimates for any port pair, and market predictions — all using the live data already in this dashboard.</p>
+        <p class="ai-setup-note">Needs an Anthropic API key. Your key is saved only in <strong>your browser</strong> — it never goes into your GitHub repo or anywhere else.</p>
+        <div class="api-key-row">
+          <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+          <button id="save-api-key" class="ai-btn-primary">Connect</button>
+        </div>
+        <p id="api-key-error" class="api-key-error"></p>
+        <a href="https://console.anthropic.com" target="_blank" rel="noopener" class="ai-get-key">Get a free API key at console.anthropic.com →</a>
+      </div>
+    </div>
+
+    <!-- Chat interface (shown once key is saved) -->
+    <div id="ai-chat" class="ai-chat-wrap" hidden>
+      <div class="ai-chat-header">
+        <div>
+          <h2>AI Trading Assistant</h2>
+          <p>Analysing live data from <span id="ai-port-count">—</span> ports and <span id="ai-route-count">—</span> routes</p>
+        </div>
+        <div class="ai-header-btns">
+          <button id="clear-chat" class="ai-btn-sm">Clear chat</button>
+          <button id="change-api-key" class="ai-btn-sm">Change key</button>
+        </div>
+      </div>
+
+      <div class="ai-quick-actions">
+        <button class="quick-btn" data-prompt="What are the top 5 most profitable buy-reposition-sell routes right now based on current surplus and deficit ports? Show full cost breakdown for each including depot fees and DPP.">🏆 Best routes now</button>
+        <button class="quick-btn" data-prompt="Based on current dwell time trends and market signals, predict container price movements over the next 3 months. Which ports are likely to flip status?">📈 Price predictions</button>
+        <button class="quick-btn" data-prompt="Which ports currently offer the best buying opportunities? Rank the surplus ports by how cheap containers are likely to be and explain why.">💰 Best buy ports</button>
+        <button class="quick-btn" data-prompt="Estimate the full cost and margin for a 20ft container trip from Rotterdam to Shanghai right now, including all fees.">🧮 Rotterdam → Shanghai</button>
+        <button class="quick-btn" data-prompt="What geopolitical and market risks should I be aware of right now that could affect container trading? Which lanes are most affected?">⚠️ Risk analysis</button>
+        <button class="quick-btn" data-prompt="If I have $10,000 to invest in containers right now, what strategy would you recommend? Which port, which size, which route?">💡 $10k strategy</button>
+      </div>
+
+      <div id="ai-messages" class="ai-messages" aria-live="polite"></div>
+
+      <div class="ai-input-area">
+        <input type="text" id="ai-input" class="ai-input" placeholder="Ask about any route, port, cost estimate, or prediction…" autocomplete="off">
+        <button id="ai-send" class="ai-btn-primary">Send</button>
+      </div>
+    </div>
   </section>
 
   <!-- ═══ GLOSSARY ════════════════════════════════════════════════════════ -->

@@ -132,10 +132,19 @@ function buildPopup(p) {
 }
 
 function initMap(ports) {
-  mapInstance = L.map('port-map', { zoomControl: true }).setView([20, 10], 2);
+  mapInstance = L.map('port-map', {
+    zoomControl: true,
+    minZoom: 1.8,
+    maxZoom: 18,
+    maxBounds: [[-85, -180], [85, 180]],
+    maxBoundsViscosity: 1.0,
+    worldCopyJump: false,
+  }).setView([20, 10], 2);
+
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd', maxZoom: 18
+    subdomains: 'abcd', maxZoom: 18, noWrap: true,
+    bounds: [[-90, -180], [90, 180]],
   }).addTo(mapInstance);
 
   ports.forEach(p => {
@@ -207,7 +216,10 @@ function setupFullscreen() {
 
 // ═══ ROUTES + ENHANCED CALCULATOR ════════════════════════════════════════════
 
+let currentRoutes = null;
+
 function renderRoutes(data) {
+  currentRoutes = data;
   const body = document.getElementById('board-body');
   body.innerHTML = data.case_studies.map(r => {
     const net = r.sell_price_usd - r.buy_price_usd + r.pickup_charge_usd;
@@ -391,6 +403,193 @@ function initTabs(allData) {
   });
 }
 
+// ═══ AI ASSISTANT ════════════════════════════════════════════════════════════
+
+let conversationHistory = [];
+
+function aiSystemPrompt() {
+  const portLines = allPorts.map(p =>
+    `• ${p.port}, ${p.country}: ${p.status.toUpperCase()}` +
+    (p.dwell_days ? ` | dwell ${p.dwell_days}d` : '') +
+    (p.monthly_teu_thousands ? ` | ~${p.monthly_teu_thousands}k TEU/mo` : '') +
+    (p.trend ? ` | trend: ${p.trend}` : '')
+  ).join('\n');
+
+  const routeLines = currentRoutes
+    ? currentRoutes.case_studies.map(r => {
+        const net = r.sell_price_usd - r.buy_price_usd + r.pickup_charge_usd;
+        return `• ${r.origin_port}→${r.dest_port} (${r.container_size}): buy $${r.buy_price_usd} sell $${r.sell_price_usd} pickup ${r.pickup_charge_usd >= 0 ? '+' : ''}$${r.pickup_charge_usd} → net ~$${net}`;
+      }).join('\n')
+    : 'No route data loaded yet.';
+
+  return `You are a container trading analyst embedded in the Backhaul dashboard. You specialise in the buy-reposition-sell strategy for shipping containers.
+
+LIVE PORT STATUS (${allPorts.length} ports tracked):
+${portLines}
+
+KNOWN TRADE ROUTES:
+${routeLines}
+
+PRICING FRAMEWORK (use when estimating any route):
+Surplus port buy prices: 20ft $700–1,000 | 40ft HC $1,200–1,700
+Balanced port buy prices: 20ft $1,000–1,400 | 40ft HC $1,700–2,200
+Deficit port sell prices: 20ft $1,200–1,700 | 40ft HC $2,000–2,800
+Pickup charge: surplus→deficit lane = +$100 to +$400 (credit to you)
+Pickup charge: deficit→surplus lane = −$100 to −$300 (you pay)
+Fixed overhead per trip: depot out-gate ~$75 + depot in-gate ~$100 + DPP insurance ~$100 = ~$275 minimum
+
+WHEN ASKED FOR BEST ROUTES: rank all surplus→deficit port pairs by estimated net margin after the $275 fixed overhead. Show top 5 with full cost breakdown.
+WHEN ASKED FOR PREDICTIONS: reason from dwell-time trends, tightening markets (India ports rising fast), disruption signals (Middle East), and nearshoring shifts.
+WHEN ASKED ABOUT A SPECIFIC ROUTE: always give a full itemised cost breakdown and net margin estimate.
+
+Be specific — cite port names and current status. Keep responses concise, structured, and actionable. Use bullet points and bold for key numbers.`;
+}
+
+async function callClaude(userMessage) {
+  const apiKey = localStorage.getItem('bh_api_key');
+  if (!apiKey) { showAISetup(); return null; }
+
+  conversationHistory.push({ role: 'user', content: userMessage });
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1500,
+      system: aiSystemPrompt(),
+      messages: conversationHistory,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${res.status}`);
+  }
+
+  const data = await res.json();
+  const reply = data.content[0].text;
+  conversationHistory.push({ role: 'assistant', content: reply });
+  return reply;
+}
+
+function mdToHtml(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+function addMessage(role, content) {
+  const msgs = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = `ai-message ai-${role}`;
+  div.innerHTML = `<div class="ai-bubble">${mdToHtml(content)}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showAISetup() {
+  document.getElementById('ai-setup').hidden = false;
+  document.getElementById('ai-chat').hidden = true;
+}
+
+function showAIChat() {
+  document.getElementById('ai-setup').hidden = true;
+  document.getElementById('ai-chat').hidden = false;
+}
+
+async function sendAIMessage(text) {
+  if (!text.trim()) return;
+  const input   = document.getElementById('ai-input');
+  const sendBtn = document.getElementById('ai-send');
+  input.value = '';
+  input.disabled = true;
+  sendBtn.disabled = true;
+
+  addMessage('user', text);
+
+  const msgs = document.getElementById('ai-messages');
+  const loading = document.createElement('div');
+  loading.className = 'ai-message ai-assistant';
+  loading.innerHTML = '<div class="ai-bubble ai-loading"><span>.</span><span>.</span><span>.</span></div>';
+  msgs.appendChild(loading);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const reply = await callClaude(text);
+    loading.remove();
+    if (reply) addMessage('assistant', reply);
+  } catch (err) {
+    loading.remove();
+    addMessage('assistant', `⚠️ Error: ${err.message}\n\nIf your API key is wrong, click **Change key** above.`);
+  }
+
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function initAI() {
+  // Update header counts
+  const pc = document.getElementById('ai-port-count');
+  const rc = document.getElementById('ai-route-count');
+  if (pc) pc.textContent = allPorts.length + ' ports';
+  if (rc && currentRoutes) rc.textContent = currentRoutes.case_studies.length + ' routes';
+
+  const saved = localStorage.getItem('bh_api_key');
+  if (saved) {
+    showAIChat();
+  } else {
+    showAISetup();
+  }
+
+  document.getElementById('save-api-key').addEventListener('click', () => {
+    const key = document.getElementById('api-key-input').value.trim();
+    const err = document.getElementById('api-key-error');
+    if (!key) { err.textContent = 'Please enter a key.'; return; }
+    if (!key.startsWith('sk-ant-')) { err.textContent = 'Key should start with sk-ant-'; return; }
+    err.textContent = '';
+    localStorage.setItem('bh_api_key', key);
+    showAIChat();
+    addMessage('assistant', "Ready. I have live data on all tracked ports and routes. Try one of the quick actions, or ask me anything about routes, margins, or market predictions.");
+  });
+
+  document.getElementById('api-key-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('save-api-key').click();
+  });
+
+  document.getElementById('change-api-key').addEventListener('click', () => {
+    localStorage.removeItem('bh_api_key');
+    conversationHistory = [];
+    document.getElementById('ai-messages').innerHTML = '';
+    showAISetup();
+  });
+
+  document.getElementById('clear-chat').addEventListener('click', () => {
+    conversationHistory = [];
+    document.getElementById('ai-messages').innerHTML = '';
+    addMessage('assistant', "Conversation cleared. What would you like to analyse?");
+  });
+
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => sendAIMessage(btn.dataset.prompt));
+  });
+
+  document.getElementById('ai-send').addEventListener('click', () => {
+    sendAIMessage(document.getElementById('ai-input').value);
+  });
+
+  document.getElementById('ai-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIMessage(e.target.value); }
+  });
+}
+
 // ═══ STATUS BAR ═══════════════════════════════════════════════════════════════
 
 function setStatus(timestamps) {
@@ -417,6 +616,7 @@ async function init() {
     renderLiveFeed(portwatch);
     renderGlossary();
     initTabs({ ports, teu, routes });
+    initAI();
     setStatus([ports.updated, teu.updated, routes.updated, portwatch.updated]);
 
   } catch (err) {
