@@ -340,5 +340,17 @@ footer code { font-family: var(--mono); background: var(--panel); padding: 1px 5
 .popup-mt-link { font-size: 11px; color: var(--teal); text-decoration: none; }
 .popup-mt-link:hover { text-decoration: underline; }
 
+/* ── ROUTE ARC LABELS ────────────────────────────────────────── */
+.route-label {
+  background: var(--bg); border: 1px solid; border-radius: 4px;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  padding: 2px 5px; white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  pointer-events: none;
+}
+
+/* ── ZOOM DISPLAY ────────────────────────────────────────────── */
+.zoom-display { font-family: var(--mono); font-size: 11px; color: var(--amber); margin-bottom: 4px; }
+
 @media (max-width: 620px) { .map-panel { width: 220px; } }
 

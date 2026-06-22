@@ -118,6 +118,95 @@ let mapMarkers  = [];
 let mapReady    = false;
 let isFullscreen = false;
 let portWatchData = {};
+let routeLayer = null;
+let portCoordLookup = {};
+
+// ── Port coordinate lookup (for drawing route arcs) ───────────────────────────
+function buildPortCoordLookup(ports) {
+  portCoordLookup = {};
+  ports.forEach(p => {
+    if (p.lat != null && p.lng != null) {
+      portCoordLookup[p.port.toLowerCase()] = { lat: p.lat, lng: p.lng, status: p.status };
+    }
+  });
+}
+
+function findPortCoord(name) {
+  if (!name) return null;
+  const q = name.toLowerCase();
+  if (portCoordLookup[q]) return portCoordLookup[q];
+  for (const [key, val] of Object.entries(portCoordLookup)) {
+    if (q.includes(key) || key.includes(q)) return val;
+  }
+  return null;
+}
+
+// ── Arc drawing for trade routes ──────────────────────────────────────────────
+function arcPoints(lat1, lng1, lat2, lng2, n = 40) {
+  // Handle date line crossing
+  let lng2adj = lng2;
+  if (lng2 - lng1 > 180)  lng2adj = lng2 - 360;
+  if (lng2 - lng1 < -180) lng2adj = lng2 + 360;
+
+  // Bezier control point: elevated midpoint for curved arc effect
+  const midLat = (lat1 + lat2) / 2 + Math.min(40, Math.abs(lat2 - lat1) * 0.4 + 12);
+  const midLng = (lng1 + lng2adj) / 2;
+
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const t  = i / n;
+    const t1 = (1 - t) * (1 - t);
+    const t2 = 2 * (1 - t) * t;
+    const t3 = t * t;
+    pts.push([t1 * lat1 + t2 * midLat + t3 * lat2,
+              t1 * lng1 + t2 * midLng  + t3 * lng2adj]);
+  }
+  return pts;
+}
+
+function drawTradeRoutes(routes) {
+  if (routeLayer) { routeLayer.clearLayers(); routeLayer.remove(); }
+  routeLayer = L.layerGroup().addTo(mapInstance);
+
+  routes.case_studies.forEach(r => {
+    const o = findPortCoord(r.origin_port);
+    const d = findPortCoord(r.dest_port);
+    if (!o || !d) return;
+
+    const net    = r.sell_price_usd - r.buy_price_usd + r.pickup_charge_usd;
+    const costs  = 75 + 100 + 100; // depot out + depot in + DPP
+    const netAll = net - costs;
+    const color  = netAll > 400 ? '#5FB87B' : netAll > 100 ? '#E8A33D' : '#D9695A';
+
+    const pts  = arcPoints(o.lat, o.lng, d.lat, d.lng);
+    const line = L.polyline(pts, { color, weight: 2.5, opacity: 0.75, dashArray: '7 5' });
+
+    line.bindPopup(`
+      <div class="popup-port">${r.origin_port} → ${r.dest_port}</div>
+      <div class="popup-country">${r.container_size}</div>
+      <div style="margin-top:8px">
+        <div class="popup-stat"><b>Buy price:</b> $${r.buy_price_usd.toLocaleString()}</div>
+        <div class="popup-stat"><b>Sell price:</b> $${r.sell_price_usd.toLocaleString()}</div>
+        <div class="popup-stat"><b>Pickup charge:</b> ${r.pickup_charge_usd >= 0 ? '+' : ''}$${r.pickup_charge_usd.toLocaleString()}</div>
+        <div class="popup-stat"><b>Typical costs:</b> ~$${costs} (depots + DPP)</div>
+        <div class="popup-stat" style="margin-top:6px;font-weight:700;color:${color}">Net margin: ~$${netAll.toLocaleString()}</div>
+      </div>
+      ${r.note ? `<div class="popup-note">${r.note}</div>` : ''}
+    `, { maxWidth: 280 });
+
+    // Midpoint label marker
+    const mid  = pts[Math.floor(pts.length / 2)];
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="route-label" style="border-color:${color};color:${color}">$${netAll.toLocaleString()}</div>`,
+      iconSize: null,
+    });
+    const labelMarker = L.marker(mid, { icon, interactive: false });
+
+    routeLayer.addLayer(line);
+    routeLayer.addLayer(labelMarker);
+  });
+}
 
 function buildPortWatchLookup(pw) {
   portWatchData = {};
@@ -667,6 +756,7 @@ function createMapSidePanel() {
 
     <div class="mp-section">
       <div class="mp-section-title">Live ships (AIS)</div>
+      <div id="zoom-display" class="zoom-display">Zoom: — (need 5+ for ships)</div>
       <label class="mp-toggle">
         <input type="checkbox" id="ships-chk"> Show ships in view
       </label>
@@ -676,10 +766,18 @@ function createMapSidePanel() {
                value="${localStorage.getItem('bh_ais_key') || ''}">
         <button id="ais-save" class="mp-btn">Save key</button>
         <p class="mp-hint">Free key: <a href="https://aisstream.io" target="_blank" rel="noopener">aisstream.io</a>
-          &nbsp;·&nbsp; Shows vessels in current map view</p>
-        <p class="mp-hint" style="color:var(--muted);margin-top:4px">MarineTraffic API: $500+/mo — use the link in each port popup instead</p>
+          &nbsp;·&nbsp; Must zoom to level 5+ first</p>
+        <p class="mp-hint" style="color:var(--muted);margin-top:4px">MarineTraffic API: $500+/mo — use port popup links instead</p>
       </div>
       <div id="ais-status" class="ais-status"></div>
+    </div>
+
+    <div class="mp-section">
+      <div class="mp-section-title">Trade routes</div>
+      <label class="mp-toggle">
+        <input type="checkbox" id="routes-chk"> Show route arcs
+      </label>
+      <p class="mp-hint">Coloured arcs: 🟢 good margin · 🟡 moderate · 🔴 thin. Click arc for economics.</p>
     </div>
 
     <div class="mp-section">
@@ -755,6 +853,26 @@ function createMapSidePanel() {
     if (e.target.checked) loadWorldPorts();
     else if (worldPortLayer) { worldPortLayer.clearLayers(); }
   });
+
+  // Trade routes toggle
+  document.getElementById('routes-chk').addEventListener('change', e => {
+    if (e.target.checked) {
+      if (currentRoutes) drawTradeRoutes(currentRoutes);
+    } else {
+      if (routeLayer) { routeLayer.clearLayers(); routeLayer.remove(); routeLayer = null; }
+    }
+  });
+
+  // Live zoom level display
+  function updateZoomDisplay() {
+    const zd = document.getElementById('zoom-display');
+    if (!zd) return;
+    const z = mapInstance.getZoom();
+    zd.textContent = `Zoom: ${z.toFixed(1)} ${z >= AIS_MIN_ZOOM ? '✓ ships enabled' : `(zoom to ${AIS_MIN_ZOOM}+ for ships)`}`;
+    zd.style.color = z >= AIS_MIN_ZOOM ? 'var(--teal)' : 'var(--amber)';
+  }
+  mapInstance.on('zoomend', updateZoomDisplay);
+  updateZoomDisplay();
 
   // Freshness
   renderFreshness();
@@ -939,6 +1057,7 @@ async function init() {
 
     allTimestamps = { ports: ports.updated, teu: teu.updated, routes: routes.updated, portwatch: portwatch.updated };
 
+    buildPortCoordLookup(ports.ports);
     renderOverview(ports, teu);
     renderRoutes(routes);
     renderLiveFeed(portwatch);
