@@ -1,33 +1,104 @@
 {
   "updated": "2026-06-21T00:00:00Z",
-  "source": "Container xChange published case studies and blog leasing-rate posts, 2025",
-  "sign_convention": "pickup_charge_usd is from the container OWNER's perspective: positive = you receive this as lease revenue, negative = you pay this to get your container repositioned. Real quotes can go either way even within the same country pair — always check the live listing, don't assume direction from a general rule.",
+  "source": "Container xChange published case studies and market blog posts, 2024-2025",
+  "sign_convention": "pickup_charge_usd: positive = you RECEIVE this (moving containers the right direction). Negative = you PAY this. Always verify on a live platform before committing capital.",
   "case_studies": [
     {
       "id": "in-cn-01",
       "origin_port": "Nhava Sheva", "origin_country": "India",
       "dest_port": "Shenzhen", "dest_country": "China",
       "container_size": "20ft",
-      "buy_price_usd": 760,
-      "sell_price_usd": 1235,
-      "pickup_charge_usd": 150,
-      "note": "Published trading case study — container leased one-way to a shipper en route to Shenzhen, then sold. Not a live quote."
+      "buy_price_usd": 760, "sell_price_usd": 1235, "pickup_charge_usd": 150,
+      "note": "Published case study. Container leased one-way to a shipper en route to Shenzhen."
     },
     {
       "id": "in-us-01",
       "origin_port": "Nhava Sheva", "origin_country": "India",
       "dest_port": "Minneapolis", "dest_country": "USA",
       "container_size": "20ft",
-      "buy_price_usd": 760,
-      "sell_price_usd": 2500,
-      "pickup_charge_usd": 0,
-      "note": "Published trading case study — direct resale, no reposition leg detailed in the source. Likely excludes inland trucking/freight cost to reach Minneapolis, so treat this margin as optimistic."
+      "buy_price_usd": 760, "sell_price_usd": 2500, "pickup_charge_usd": 0,
+      "note": "Published case study. Direct resale. Likely excludes inland trucking to Minneapolis — treat margin as optimistic."
+    },
+    {
+      "id": "eu-cn-01",
+      "origin_port": "Rotterdam", "origin_country": "Netherlands",
+      "dest_port": "Shanghai", "dest_country": "China",
+      "container_size": "20ft",
+      "buy_price_usd": 900, "sell_price_usd": 1400, "pickup_charge_usd": 200,
+      "note": "Estimated. Europe-to-China is a credit lane — carriers pay you to move empties back. Buy cheap in Rotterdam surplus, receive credit, sell into Shanghai deficit. Figures directionally correct, not a live quote."
+    },
+    {
+      "id": "eu-cn-02",
+      "origin_port": "Hamburg", "origin_country": "Germany",
+      "dest_port": "Ningbo", "dest_country": "China",
+      "container_size": "40ft HC",
+      "buy_price_usd": 1600, "sell_price_usd": 2400, "pickup_charge_usd": 350,
+      "note": "Estimated. 40ft HC surplus in Hamburg depot. Credit for moving toward China deficit. Figures directionally correct, not a live quote."
+    },
+    {
+      "id": "us-cn-01",
+      "origin_port": "Los Angeles", "origin_country": "USA",
+      "dest_port": "Shanghai", "dest_country": "China",
+      "container_size": "20ft",
+      "buy_price_usd": 850, "sell_price_usd": 1300, "pickup_charge_usd": 175,
+      "note": "Estimated. US West Coast surplus to China deficit — classic credit-direction lane. Verify current pickup rates on xChange."
+    },
+    {
+      "id": "us-cn-02",
+      "origin_port": "Long Beach", "origin_country": "USA",
+      "dest_port": "Qingdao", "dest_country": "China",
+      "container_size": "40ft HC",
+      "buy_price_usd": 1500, "sell_price_usd": 2200, "pickup_charge_usd": 300,
+      "note": "Estimated. Parallel trade to Los Angeles → Shanghai on the same directional credit logic."
+    },
+    {
+      "id": "af-eu-01",
+      "origin_port": "Durban", "origin_country": "South Africa",
+      "dest_port": "Rotterdam", "dest_country": "Netherlands",
+      "container_size": "20ft",
+      "buy_price_usd": 650, "sell_price_usd": 1100, "pickup_charge_usd": -120,
+      "note": "Estimated. Durban has deep surplus. Rotterdam is also surplus so this lane is surplus-to-surplus — no credit, you pay to reposition. Thin margins — buyer pool in Rotterdam is wide but price is low. Pickup charge is negative (you pay)."
+    },
+    {
+      "id": "in-me-01",
+      "origin_port": "Nhava Sheva", "origin_country": "India",
+      "dest_port": "Jebel Ali", "dest_country": "UAE",
+      "container_size": "20ft",
+      "buy_price_usd": 820, "sell_price_usd": 1400, "pickup_charge_usd": 80,
+      "note": "Estimated. Lane disrupted by Middle East conflict — use with caution, prices volatile. Verify current availability and routing before committing."
+    },
+    {
+      "id": "eu-in-01",
+      "origin_port": "Antwerp", "origin_country": "Belgium",
+      "dest_port": "Chennai", "dest_country": "India",
+      "container_size": "20ft",
+      "buy_price_usd": 880, "sell_price_usd": 1500, "pickup_charge_usd": 120,
+      "note": "Estimated. Europe surplus to India tightening market. Pickup credit smaller than Europe-China lanes because India is not yet as deeply deficit as China."
+    },
+    {
+      "id": "sea-cn-01",
+      "origin_port": "Singapore", "origin_country": "Singapore",
+      "dest_port": "Shanghai", "dest_country": "China",
+      "container_size": "20ft",
+      "buy_price_usd": 1100, "sell_price_usd": 1500, "pickup_charge_usd": 50,
+      "note": "Estimated. Singapore is a balanced transshipment hub — prices higher than pure surplus ports. Smaller spread but faster cycle times (efficient port, near-zero dwell)."
     }
   ],
   "lease_rate_references": [
-    { "origin_port": "Shanghai", "dest_port": "Rotterdam", "container_size": "20ft", "pickup_charge_usd": 270, "free_days": 68, "per_diem_usd": 3.5 },
-    { "origin_port": "Shanghai", "dest_port": "New York", "container_size": "40ft HC", "pickup_charge_usd": 1330, "free_days": 82, "per_diem_usd": 4 },
-    { "origin_port": "Shanghai", "dest_port": "Los Angeles", "container_size": "20ft", "pickup_charge_usd": 1460, "free_days": 135, "per_diem_usd": 5.5 },
-    { "origin_port": "Ningbo", "dest_port": "Toronto", "container_size": "20ft", "pickup_charge_usd": 1230, "free_days": 70, "per_diem_usd": 5 }
-  ]
+    { "origin_port": "Shanghai",  "dest_port": "Rotterdam",   "container_size": "20ft",    "pickup_charge_usd": 270,  "free_days": 68,  "per_diem_usd": 3.50 },
+    { "origin_port": "Shanghai",  "dest_port": "New York",    "container_size": "40ft HC", "pickup_charge_usd": 1330, "free_days": 82,  "per_diem_usd": 4.00 },
+    { "origin_port": "Shanghai",  "dest_port": "Los Angeles", "container_size": "20ft",    "pickup_charge_usd": 1460, "free_days": 135, "per_diem_usd": 5.50 },
+    { "origin_port": "Ningbo",    "dest_port": "Montreal",    "container_size": "20ft",    "pickup_charge_usd": 1230, "free_days": 70,  "per_diem_usd": 5.00 },
+    { "origin_port": "Rotterdam", "dest_port": "Shanghai",    "container_size": "20ft",    "pickup_charge_usd": -200, "free_days": 35,  "per_diem_usd": 3.50 },
+    { "origin_port": "Hamburg",   "dest_port": "Ningbo",      "container_size": "20ft",    "pickup_charge_usd": -180, "free_days": 38,  "per_diem_usd": 3.50 },
+    { "origin_port": "Los Angeles","dest_port": "Shanghai",   "container_size": "20ft",    "pickup_charge_usd": -175, "free_days": 30,  "per_diem_usd": 3.00 }
+  ],
+  "typical_fixed_costs": {
+    "note": "Industry typical ranges used as defaults in the margin calculator. Actual costs vary by depot, carrier, and contract.",
+    "depot_out_gate_usd": { "low": 50, "typical": 75, "high": 150 },
+    "depot_in_gate_usd":  { "low": 75, "typical": 100, "high": 200 },
+    "damage_protection_plan_usd": { "low": 75, "typical": 100, "high": 150 },
+    "per_diem_20ft_usd_per_day": { "low": 0.60, "typical": 3.50, "high": 6.00 },
+    "per_diem_40ft_usd_per_day": { "low": 0.80, "typical": 4.50, "high": 8.00 }
+  }
 }

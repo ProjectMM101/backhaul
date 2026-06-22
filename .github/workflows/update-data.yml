@@ -23,6 +23,7 @@ jobs:
       - name: Run fetchers
         run: |
           python scripts/fetch_worldbank_teu.py
+          python scripts/fetch_portwatch.py
           # Add more fetch scripts here as you build them, e.g.:
           # python scripts/fetch_dwell_times.py
           # python scripts/fetch_ais_vessels.py

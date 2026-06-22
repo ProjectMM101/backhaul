@@ -1,0 +1,7 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API",
+  "period": "seed file — run scripts/fetch_portwatch.py to populate with live data",
+  "note": "This file is empty until the GitHub Actions workflow runs fetch_portwatch.py. Add it to .github/workflows/update-data.yml and push to trigger it.",
+  "ports": []
+}

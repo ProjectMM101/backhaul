@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backhaul — Container Market Watch</title>
+<title>Backhaul — Container Market Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -21,10 +21,11 @@
     </div>
   </div>
   <nav class="tab-nav" role="tablist" aria-label="Dashboard sections">
-    <button class="tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
-    <button class="tab" data-tab="map" role="tab" aria-selected="false">Port Map</button>
-    <button class="tab" data-tab="routes" role="tab" aria-selected="false">Routes</button>
-    <button class="tab" data-tab="glossary" role="tab" aria-selected="false">Glossary</button>
+    <button class="tab active" data-tab="overview"  role="tab">Overview</button>
+    <button class="tab"        data-tab="map"       role="tab">Port Map</button>
+    <button class="tab"        data-tab="routes"    role="tab">Routes</button>
+    <button class="tab"        data-tab="live"      role="tab">Live Feed</button>
+    <button class="tab"        data-tab="glossary"  role="tab">Glossary</button>
   </nav>
   <div class="status">
     <span class="status-dot" id="status-dot" aria-hidden="true"></span>
@@ -34,16 +35,23 @@
 
 <main>
 
-  <!-- OVERVIEW -->
+  <!-- ═══ OVERVIEW ═══════════════════════════════════════════════════════ -->
   <section id="tab-overview" class="tab-content active" role="tabpanel">
     <div class="stat-cards" id="overview-stats"></div>
+
+    <div class="search-wrap">
+      <input id="port-search-overview" class="search-input" type="search"
+             placeholder="Search any port…" autocomplete="off">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+    </div>
+
     <div class="split-grid">
       <div class="split-panel">
         <div class="split-head buy-head">
           <span class="split-icon" aria-hidden="true">↓</span>
           <div>
             <h2>Buy side — surplus ports</h2>
-            <p>Containers pile up here. Prices are low. These are your buying opportunities.</p>
+            <p>Containers pile up here. Prices low. Your buying opportunity.</p>
           </div>
         </div>
         <div id="buy-ports"></div>
@@ -53,18 +61,19 @@
           <span class="split-icon" aria-hidden="true">↑</span>
           <div>
             <h2>Sell side — deficit ports</h2>
-            <p>Containers are scarce here. Prices are high. These are your selling opportunities.</p>
+            <p>Containers scarce here. Prices high. Your selling opportunity.</p>
           </div>
         </div>
         <div id="sell-ports"></div>
       </div>
     </div>
+
     <div class="split-panel tightening-panel">
       <div class="split-head watch-head">
         <span class="split-icon" aria-hidden="true">~</span>
         <div>
           <h2>Watch — tightening &amp; disrupted</h2>
-          <p>Markets in transition. Was cheap, getting more expensive — or disrupted by events. Don't assume old prices hold.</p>
+          <p>Markets in transition. Don't assume last week's prices hold.</p>
         </div>
       </div>
       <div id="watch-ports"></div>
@@ -72,83 +81,160 @@
     <p class="panel-source" id="overview-source"></p>
   </section>
 
-  <!-- PORT MAP -->
+  <!-- ═══ PORT MAP ════════════════════════════════════════════════════════ -->
   <section id="tab-map" class="tab-content" role="tabpanel">
-    <div class="map-legend" aria-label="Map legend">
-      <span class="legend-item"><span class="legend-dot" style="background:#E8A33D"></span>Surplus — buy cheap</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#4FB6AC"></span>Deficit — sell high</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#8B9BA8"></span>Balanced</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#A855F7"></span>Tightening</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#D9695A"></span>Disrupted</span>
-      <p class="map-hint">Click any port for details</p>
+    <div class="map-toolbar">
+      <div class="map-legend" aria-label="Map legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#E8A33D"></span>Surplus</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#4FB6AC"></span>Deficit</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8B9BA8"></span>Balanced</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#A855F7"></span>Tightening</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#D9695A"></span>Disrupted</span>
+      </div>
+      <div class="map-right-tools">
+        <div class="map-search-wrap">
+          <input id="port-search-map" class="search-input search-input-sm"
+                 type="search" placeholder="Fly to port…" autocomplete="off">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <ul id="map-search-results" class="search-results" hidden></ul>
+        </div>
+        <button id="fullscreen-btn" class="fs-btn" title="Toggle fullscreen map"
+                aria-label="Toggle fullscreen map">⤢</button>
+      </div>
     </div>
-    <div id="port-map" role="img" aria-label="World map showing container port market status"></div>
-    <p class="panel-source">Status based on structural trade-flow analysis and published market research. Not a live feed — verify on Container xChange or BOXXPORT before committing capital.</p>
+    <div id="port-map" role="img" aria-label="World map of container port market status"></div>
+    <p class="panel-source map-source">Marker size ∝ monthly TEU volume. Click any marker for port details. Status based on structural trade-flow analysis — verify on Container xChange before committing capital.</p>
   </section>
 
-  <!-- ROUTES -->
+  <!-- ═══ ROUTES ══════════════════════════════════════════════════════════ -->
   <section id="tab-routes" class="tab-content" role="tabpanel">
 
     <div class="panel">
       <div class="panel-head">
         <h2>Margin board</h2>
-        <p>Published buy-reposition-sell case studies. Net margin = sell − buy + pickup charge. Not live quotes.</p>
+        <p>Published and estimated buy-reposition-sell routes. Hover a row for notes. Not live quotes.</p>
       </div>
       <div class="board-wrap">
-        <table class="board" id="margin-board">
-          <thead>
-            <tr><th>Route</th><th>Size</th><th>Buy</th><th>Sell</th><th>Pickup chg.</th><th>Net margin</th></tr>
-          </thead>
-          <tbody id="board-body">
-            <tr><td colspan="6" class="board-loading">Loading routes…</td></tr>
-          </tbody>
+        <table class="board">
+          <thead><tr><th>Route</th><th>Size</th><th>Buy</th><th>Sell</th><th>Pickup chg.</th><th>Gross margin</th></tr></thead>
+          <tbody id="board-body"><tr><td colspan="6" class="board-loading">Loading…</td></tr></tbody>
         </table>
       </div>
       <p class="panel-source" id="board-source"></p>
     </div>
 
+    <!-- ENHANCED CALCULATOR -->
     <div class="panel">
       <div class="panel-head">
-        <h2>Margin calculator</h2>
-        <p>Enter numbers from a real listing to see your net position</p>
+        <h2>Trip cost calculator</h2>
+        <p>Full cost breakdown — not just sell minus buy. Pre-filled with industry typical values; edit any field.</p>
       </div>
-      <div class="calc-grid">
-        <label>Buy price (USD)<input type="number" id="calc-buy" value="800" step="1"></label>
-        <label>Sell price (USD)<input type="number" id="calc-sell" value="1500" step="1"></label>
-        <label>Pickup charge (USD)
-          <input type="number" id="calc-charge" value="0" step="1">
-          <span class="hint">positive = you receive it &nbsp;·&nbsp; negative = you pay it</span>
-        </label>
-        <div class="calc-result">
-          <span class="calc-result-label">Net margin</span>
-          <span class="calc-result-figure" id="calc-result">—</span>
+
+      <div class="calc-v2">
+        <div class="calc-size-row">
+          <label class="calc-label">Container size</label>
+          <div class="size-btns">
+            <button class="size-btn active" data-size="20">20ft</button>
+            <button class="size-btn" data-size="40">40ft HC</button>
+          </div>
         </div>
+
+        <div class="calc-inputs">
+          <fieldset class="calc-group">
+            <legend>Purchase</legend>
+            <label>Buy price (USD)<input class="ci" id="ci-buy" type="number" value="800" min="0"></label>
+          </fieldset>
+
+          <fieldset class="calc-group">
+            <legend>Lease terms</legend>
+            <label>Pickup charge (USD)
+              <input class="ci" id="ci-pickup" type="number" value="150">
+              <span class="hint">+ = you receive &nbsp;· &nbsp;− = you pay</span>
+            </label>
+            <label>Free days <input class="ci" id="ci-freedays" type="number" value="68" min="0"></label>
+            <label>Days actually used <input class="ci" id="ci-daysused" type="number" value="60" min="0"></label>
+            <label>Per diem rate (USD/day) <input class="ci" id="ci-perdiem" type="number" value="3.50" step="0.10" min="0"></label>
+          </fieldset>
+
+          <fieldset class="calc-group">
+            <legend>Fixed costs</legend>
+            <label>Depot out-gate (pickup end) <input class="ci" id="ci-depot-out" type="number" value="75" min="0"></label>
+            <label>Depot in-gate (delivery end) <input class="ci" id="ci-depot-in" type="number" value="100" min="0"></label>
+            <label>Insurance / DPP <input class="ci" id="ci-insurance" type="number" value="100" min="0"></label>
+          </fieldset>
+
+          <fieldset class="calc-group">
+            <legend>Sale</legend>
+            <label>Expected sell price (USD) <input class="ci" id="ci-sell" type="number" value="1500" min="0"></label>
+          </fieldset>
+        </div>
+
+        <div class="calc-breakdown" id="calc-breakdown">
+          <div class="breakdown-col">
+            <div class="breakdown-head">Revenue</div>
+            <div class="breakdown-rows" id="rev-rows"></div>
+            <div class="breakdown-total" id="rev-total"></div>
+          </div>
+          <div class="breakdown-col">
+            <div class="breakdown-head">Costs</div>
+            <div class="breakdown-rows" id="cost-rows"></div>
+            <div class="breakdown-total" id="cost-total"></div>
+          </div>
+        </div>
+
+        <div class="calc-net" id="calc-net"></div>
       </div>
     </div>
 
+    <!-- LEASE RATES -->
     <div class="panel">
       <div class="panel-head">
         <h2>One-way lease reference rates</h2>
-        <p>Example pickup charges on specific lanes from published data. Positive = you receive this as the container owner.</p>
+        <p>Published pickup charges by lane. Positive = you receive as owner. Negative = you pay to reposition.</p>
       </div>
       <div class="board-wrap">
-        <table class="board" id="lease-board">
-          <thead>
-            <tr><th>Route</th><th>Size</th><th>Pickup charge</th><th>Free days</th><th>Per diem after</th></tr>
-          </thead>
-          <tbody id="lease-body">
-            <tr><td colspan="5" class="board-loading">Loading rates…</td></tr>
-          </tbody>
+        <table class="board">
+          <thead><tr><th>Route</th><th>Size</th><th>Pickup charge</th><th>Free days</th><th>Per diem after</th></tr></thead>
+          <tbody id="lease-body"><tr><td colspan="5" class="board-loading">Loading…</td></tr></tbody>
         </table>
       </div>
     </div>
 
   </section>
 
-  <!-- GLOSSARY -->
+  <!-- ═══ LIVE FEED ═══════════════════════════════════════════════════════ -->
+  <section id="tab-live" class="tab-content" role="tabpanel">
+    <div class="live-header">
+      <div>
+        <h2>IMF PortWatch — live vessel activity</h2>
+        <p id="live-subtitle">Satellite-based container vessel calls across tracked ports. Updated weekly by the IMF (Tuesdays 9 AM ET) via the free ArcGIS REST API.</p>
+      </div>
+      <div class="live-source-badge" id="live-badge"></div>
+    </div>
+    <div id="live-content">
+      <div class="live-empty" id="live-empty">
+        <div class="live-empty-icon">📡</div>
+        <h3>Live data not yet fetched</h3>
+        <p>Run <code>python scripts/fetch_portwatch.py</code> locally, or push to GitHub so the Actions workflow fetches it automatically. Once populated, this tab shows real container vessel call trends across 50+ tracked ports.</p>
+        <p style="margin-top:8px">The IMF PortWatch API is free and requires no key — it queries satellite AIS signals from 90,000+ ships tracking 2,065 ports worldwide.</p>
+      </div>
+      <div class="live-chart-wrap" id="live-chart-wrap" hidden>
+        <canvas id="live-chart" role="img" aria-label="Bar chart of container vessel calls by port"></canvas>
+      </div>
+      <div id="live-table-wrap" hidden>
+        <table class="board" id="live-table">
+          <thead><tr><th>Port</th><th>Country</th><th>Avg daily calls (14d)</th><th>Avg imports (TEU/day)</th><th>Avg exports (TEU/day)</th><th>Trend</th></tr></thead>
+          <tbody id="live-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="panel-source" id="live-source"></p>
+  </section>
+
+  <!-- ═══ GLOSSARY ════════════════════════════════════════════════════════ -->
   <section id="tab-glossary" class="tab-content" role="tabpanel">
     <div class="glossary-intro">
-      <p>Every term used in this dashboard and in the container trading business, explained in plain English.</p>
+      Every term used in this dashboard and in the container trading business, explained in plain English.
     </div>
     <div id="glossary-grid" class="glossary-grid"></div>
   </section>
@@ -156,7 +242,7 @@
 </main>
 
 <footer>
-  <p>Data refreshes hourly via GitHub Actions. Most panels update far less often — freight rates weekly, customs data monthly, World Bank TEU annually. See <code>README.md</code> for source details and how to extend the data layer.</p>
+  <p>Data refreshes hourly via GitHub Actions. IMF PortWatch (live vessel calls) updates weekly. Freight rate indices and customs data update monthly. World Bank TEU data is annual. See <code>README.md</code> for sources and how to extend the data layer.</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
