@@ -1,0 +1,232 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "notes": {
+    "status_key": {
+      "surplus": "More containers than the market needs. Prices low. Your BUY opportunity.",
+      "deficit": "Containers scarce. Prices high. Your SELL opportunity.",
+      "balanced": "Roughly equal supply and demand.",
+      "tightening": "Was surplus, moving toward deficit — watch this lane.",
+      "disrupted": "Significant geopolitical or logistical event affecting normal flows."
+    },
+    "data_quality": "dwell_days marked 'verified' come from cited public sources in our research. All other figures are directionally correct based on structural trade-flow analysis but are not live quotes. Always verify on Container xChange or BOXXPORT before committing capital."
+  },
+  "ports": [
+    {
+      "port": "Los Angeles", "country": "USA", "lat": 33.7405, "lng": -118.2748,
+      "status": "surplus", "dwell_days": 5.7, "arrival_to_berth_days": 0.6,
+      "monthly_teu_thousands": 900, "trend": "stable",
+      "data_quality": "verified",
+      "note": "LA Port Optimizer (Signal) confirms 5.7-day dwell. Containers pile up after imports unload — classic US West Coast surplus dynamic."
+    },
+    {
+      "port": "Long Beach", "country": "USA", "lat": 33.7701, "lng": -118.1937,
+      "status": "surplus", "dwell_days": 5.0, "arrival_to_berth_days": 0.7,
+      "monthly_teu_thousands": 820, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Sister port to LA. Structural surplus from import volume exceeding export demand."
+    },
+    {
+      "port": "New York / Newark", "country": "USA", "lat": 40.6699, "lng": -74.1659,
+      "status": "surplus", "dwell_days": 4.5, "arrival_to_berth_days": 1.2,
+      "monthly_teu_thousands": 700, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Largest US East Coast port. Surplus from import dominance similar to West Coast."
+    },
+    {
+      "port": "Savannah", "country": "USA", "lat": 32.0835, "lng": -81.0998,
+      "status": "balanced", "dwell_days": 4.0, "arrival_to_berth_days": 0.8,
+      "monthly_teu_thousands": 480, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Fast-growing East Coast hub benefiting from nearshoring and supply chain diversification."
+    },
+    {
+      "port": "Houston", "country": "USA", "lat": 29.7285, "lng": -95.2697,
+      "status": "balanced", "dwell_days": 4.2, "arrival_to_berth_days": 1.0,
+      "monthly_teu_thousands": 300, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Key petrochemical and agricultural export hub. More balanced than coastal import ports."
+    },
+    {
+      "port": "Seattle / Tacoma", "country": "USA", "lat": 47.2936, "lng": -122.4097,
+      "status": "surplus", "dwell_days": 4.8, "arrival_to_berth_days": 0.9,
+      "monthly_teu_thousands": 320, "trend": "falling",
+      "data_quality": "estimated",
+      "note": "PNW gateway. Surplus conditions, losing some volume to LA/LB and East Coast alternatives."
+    },
+    {
+      "port": "Rotterdam", "country": "Netherlands", "lat": 51.9225, "lng": 4.4792,
+      "status": "surplus", "dwell_days": 3.7, "arrival_to_berth_days": 1.2,
+      "monthly_teu_thousands": 1200, "trend": "stable",
+      "data_quality": "verified",
+      "note": "Europe's largest port. Buyer's market confirmed — surplus conditions in 2025-2026 outlook. Good buy-side port for Europe-to-China repositioning."
+    },
+    {
+      "port": "Hamburg", "country": "Germany", "lat": 53.5461, "lng": 9.9624,
+      "status": "surplus", "dwell_days": 4.0, "arrival_to_berth_days": 1.5,
+      "monthly_teu_thousands": 800, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Major European hub. Consistent surplus alongside Rotterdam in 2025-2026."
+    },
+    {
+      "port": "Antwerp-Bruges", "country": "Belgium", "lat": 51.2654, "lng": 4.2924,
+      "status": "surplus", "dwell_days": 4.5, "arrival_to_berth_days": 1.3,
+      "monthly_teu_thousands": 1000, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Europe's second-largest container port. Surplus conditions tracking Rotterdam."
+    },
+    {
+      "port": "Felixstowe", "country": "UK", "lat": 51.9539, "lng": 1.3519,
+      "status": "surplus", "dwell_days": 4.2, "arrival_to_berth_days": 1.1,
+      "monthly_teu_thousands": 320, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "UK's largest container port. Post-Brexit trade pattern shifts have left some surplus capacity."
+    },
+    {
+      "port": "Valencia", "country": "Spain", "lat": 39.4431, "lng": -0.3226,
+      "status": "balanced", "dwell_days": 3.5, "arrival_to_berth_days": 0.9,
+      "monthly_teu_thousands": 550, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Mediterranean hub serving Southern Europe. More balanced than North Europe ports."
+    },
+    {
+      "port": "Tanger Med", "country": "Morocco", "lat": 35.8832, "lng": -5.5044,
+      "status": "balanced", "dwell_days": 2.8, "arrival_to_berth_days": 0.5,
+      "monthly_teu_thousands": 700, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Fast-growing transshipment hub on the Strait of Gibraltar. Gateway between Europe and West Africa."
+    },
+    {
+      "port": "Jebel Ali", "country": "UAE", "lat": 24.9857, "lng": 55.0272,
+      "status": "disrupted", "dwell_days": null, "arrival_to_berth_days": null,
+      "monthly_teu_thousands": 1400, "trend": null,
+      "data_quality": "estimated",
+      "note": "Middle East mega-hub severely disrupted by Iran conflict forcing carrier rerouting. Prices volatile — avoid without real-time intelligence."
+    },
+    {
+      "port": "Nhava Sheva", "country": "India", "lat": 18.9149, "lng": 72.9540,
+      "status": "tightening", "dwell_days": 5.2, "arrival_to_berth_days": 2.1,
+      "monthly_teu_thousands": 560, "trend": "falling",
+      "data_quality": "estimated",
+      "note": "Mumbai gateway. 34% YoY price increase confirmed. Was surplus; now tightening as India's export capacity grows. No longer a clear cheap-buy location."
+    },
+    {
+      "port": "Chennai", "country": "India", "lat": 13.0827, "lng": 80.2707,
+      "status": "tightening", "dwell_days": 5.5, "arrival_to_berth_days": 2.3,
+      "monthly_teu_thousands": 280, "trend": "falling",
+      "data_quality": "estimated",
+      "note": "48% YoY price increase confirmed — fastest-rising port in our dataset. Tightening rapidly."
+    },
+    {
+      "port": "Mundra", "country": "India", "lat": 22.8394, "lng": 69.7170,
+      "status": "tightening", "dwell_days": 5.0, "arrival_to_berth_days": 1.8,
+      "monthly_teu_thousands": 350, "trend": "falling",
+      "data_quality": "estimated",
+      "note": "19% YoY price increase. India's fastest-growing private port. Tightening alongside Nhava Sheva and Chennai."
+    },
+    {
+      "port": "Colombo", "country": "Sri Lanka", "lat": 6.9271, "lng": 79.8612,
+      "status": "balanced", "dwell_days": 3.0, "arrival_to_berth_days": 0.6,
+      "monthly_teu_thousands": 600, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Key transshipment hub for South Asia. Efficiently run. Serves as relay point between India, Middle East, and East Asia."
+    },
+    {
+      "port": "Durban", "country": "South Africa", "lat": -29.8587, "lng": 31.0218,
+      "status": "surplus", "dwell_days": 8.0, "arrival_to_berth_days": 4.2,
+      "monthly_teu_thousands": 200, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Africa's busiest port but chronically congested. Significant surplus — containers sit a long time. Resale is possible but buyer pool is limited."
+    },
+    {
+      "port": "Mombasa", "country": "Kenya", "lat": -4.0435, "lng": 39.6682,
+      "status": "surplus", "dwell_days": 9.0, "arrival_to_berth_days": 3.5,
+      "monthly_teu_thousands": 110, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "East Africa's main gateway. High dwell times reflect infrastructure constraints. Niche surplus market."
+    },
+    {
+      "port": "Shanghai", "country": "China", "lat": 31.3672, "lng": 121.6480,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 3.25,
+      "monthly_teu_thousands": 4200, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "World's busiest port by volume. Chronic deficit — export demand far outstrips container supply. The archetypal sell-side market."
+    },
+    {
+      "port": "Ningbo", "country": "China", "lat": 29.9158, "lng": 121.7296,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 2.1,
+      "monthly_teu_thousands": 3500, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Rivalling Shanghai for busiest port globally. Consistent equipment deficit driven by massive export volume."
+    },
+    {
+      "port": "Shenzhen / Yantian", "country": "China", "lat": 22.5678, "lng": 114.2741,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 1.8,
+      "monthly_teu_thousands": 2500, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Pearl River Delta export hub. Major deficit port — serving electronics and manufacturing exports to global markets."
+    },
+    {
+      "port": "Guangzhou / Nansha", "country": "China", "lat": 22.7258, "lng": 113.6213,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 1.9,
+      "monthly_teu_thousands": 2000, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Pearl River Delta. Fast-growing port complex. Deficit conditions typical of southern China hubs."
+    },
+    {
+      "port": "Tianjin", "country": "China", "lat": 38.9918, "lng": 117.7208,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 2.4,
+      "monthly_teu_thousands": 1600, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Beijing's sea gateway. Northern China deficit hub. Key for industrial exports."
+    },
+    {
+      "port": "Qingdao", "country": "China", "lat": 36.0671, "lng": 120.3826,
+      "status": "deficit", "dwell_days": null, "arrival_to_berth_days": 2.0,
+      "monthly_teu_thousands": 2100, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Major Shandong province export hub. Consistent deficit aligned with China's broader equipment shortage."
+    },
+    {
+      "port": "Singapore", "country": "Singapore", "lat": 1.2655, "lng": 103.8203,
+      "status": "balanced", "dwell_days": 2.0, "arrival_to_berth_days": 0.1,
+      "monthly_teu_thousands": 3000, "trend": "stable",
+      "data_quality": "verified",
+      "note": "World benchmark for port efficiency. Near-zero waiting time confirmed. Major transshipment hub — containers move in and out quickly, keeping the market balanced."
+    },
+    {
+      "port": "Port Klang", "country": "Malaysia", "lat": 2.9997, "lng": 101.3831,
+      "status": "balanced", "dwell_days": 3.5, "arrival_to_berth_days": 0.8,
+      "monthly_teu_thousands": 1000, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Malaysia's main gateway. Benefiting from manufacturing diversification away from China."
+    },
+    {
+      "port": "Tanjung Pelepas", "country": "Malaysia", "lat": 1.3627, "lng": 103.5528,
+      "status": "balanced", "dwell_days": 2.8, "arrival_to_berth_days": 0.4,
+      "monthly_teu_thousands": 900, "trend": "rising",
+      "data_quality": "estimated",
+      "note": "Efficient transshipment hub near Singapore. Gaining volume as shippers diversify."
+    },
+    {
+      "port": "Busan", "country": "South Korea", "lat": 35.1028, "lng": 129.0403,
+      "status": "balanced", "dwell_days": 2.0, "arrival_to_berth_days": 0.1,
+      "monthly_teu_thousands": 2000, "trend": "stable",
+      "data_quality": "verified",
+      "note": "Consistently records near-zero waiting time. World-class efficiency. Key transshipment hub for Northeast Asia."
+    },
+    {
+      "port": "Kaohsiung", "country": "Taiwan", "lat": 22.6041, "lng": 120.2900,
+      "status": "balanced", "dwell_days": 3.2, "arrival_to_berth_days": 0.7,
+      "monthly_teu_thousands": 950, "trend": "stable",
+      "data_quality": "estimated",
+      "note": "Taiwan's main port. Efficient and balanced. Key relay point for trans-Pacific and intra-Asia trade."
+    },
+    {
+      "port": "Chittagong", "country": "Bangladesh", "lat": 22.3475, "lng": 91.8123,
+      "status": "tightening", "dwell_days": 6.5, "arrival_to_berth_days": 3.0,
+      "monthly_teu_thousands": 250, "trend": "falling",
+      "data_quality": "estimated",
+      "note": "Bangladesh's main gateway. Fast-growing garment export sector is tightening equipment availability. Was surplus; watch this lane."
+    }
+  ]
+}

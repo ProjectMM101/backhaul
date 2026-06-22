@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backhaul — container market watch</title>
+<title>Backhaul — Container Market Watch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,9 +17,15 @@
     <span class="brand-mark" aria-hidden="true">▣</span>
     <div>
       <h1>Backhaul</h1>
-      <p class="tagline">Container repositioning &amp; margin watch</p>
+      <p class="tagline">Container repositioning &amp; margin intelligence</p>
     </div>
   </div>
+  <nav class="tab-nav" role="tablist" aria-label="Dashboard sections">
+    <button class="tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+    <button class="tab" data-tab="map" role="tab" aria-selected="false">Port Map</button>
+    <button class="tab" data-tab="routes" role="tab" aria-selected="false">Routes</button>
+    <button class="tab" data-tab="glossary" role="tab" aria-selected="false">Glossary</button>
+  </nav>
   <div class="status">
     <span class="status-dot" id="status-dot" aria-hidden="true"></span>
     <span id="last-updated">loading…</span>
@@ -27,96 +34,133 @@
 
 <main>
 
-  <section class="panel-row">
-    <div class="panel" id="panel-dwell">
+  <!-- OVERVIEW -->
+  <section id="tab-overview" class="tab-content active" role="tabpanel">
+    <div class="stat-cards" id="overview-stats"></div>
+    <div class="split-grid">
+      <div class="split-panel">
+        <div class="split-head buy-head">
+          <span class="split-icon" aria-hidden="true">↓</span>
+          <div>
+            <h2>Buy side — surplus ports</h2>
+            <p>Containers pile up here. Prices are low. These are your buying opportunities.</p>
+          </div>
+        </div>
+        <div id="buy-ports"></div>
+      </div>
+      <div class="split-panel">
+        <div class="split-head sell-head">
+          <span class="split-icon" aria-hidden="true">↑</span>
+          <div>
+            <h2>Sell side — deficit ports</h2>
+            <p>Containers are scarce here. Prices are high. These are your selling opportunities.</p>
+          </div>
+        </div>
+        <div id="sell-ports"></div>
+      </div>
+    </div>
+    <div class="split-panel tightening-panel">
+      <div class="split-head watch-head">
+        <span class="split-icon" aria-hidden="true">~</span>
+        <div>
+          <h2>Watch — tightening &amp; disrupted</h2>
+          <p>Markets in transition. Was cheap, getting more expensive — or disrupted by events. Don't assume old prices hold.</p>
+        </div>
+      </div>
+      <div id="watch-ports"></div>
+    </div>
+    <p class="panel-source" id="overview-source"></p>
+  </section>
+
+  <!-- PORT MAP -->
+  <section id="tab-map" class="tab-content" role="tabpanel">
+    <div class="map-legend" aria-label="Map legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#E8A33D"></span>Surplus — buy cheap</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#4FB6AC"></span>Deficit — sell high</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#8B9BA8"></span>Balanced</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#A855F7"></span>Tightening</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#D9695A"></span>Disrupted</span>
+      <p class="map-hint">Click any port for details</p>
+    </div>
+    <div id="port-map" role="img" aria-label="World map showing container port market status"></div>
+    <p class="panel-source">Status based on structural trade-flow analysis and published market research. Not a live feed — verify on Container xChange or BOXXPORT before committing capital.</p>
+  </section>
+
+  <!-- ROUTES -->
+  <section id="tab-routes" class="tab-content" role="tabpanel">
+
+    <div class="panel">
       <div class="panel-head">
-        <h2>Port dwell time</h2>
-        <p>Days a container sits before pickup — rising dwell means containers are piling up</p>
+        <h2>Margin board</h2>
+        <p>Published buy-reposition-sell case studies. Net margin = sell − buy + pickup charge. Not live quotes.</p>
       </div>
-      <div class="chart-wrap">
-        <canvas id="dwell-chart" role="img" aria-label="Bar chart of port dwell times"></canvas>
+      <div class="board-wrap">
+        <table class="board" id="margin-board">
+          <thead>
+            <tr><th>Route</th><th>Size</th><th>Buy</th><th>Sell</th><th>Pickup chg.</th><th>Net margin</th></tr>
+          </thead>
+          <tbody id="board-body">
+            <tr><td colspan="6" class="board-loading">Loading routes…</td></tr>
+          </tbody>
+        </table>
       </div>
-      <p class="panel-source" id="dwell-source"></p>
+      <p class="panel-source" id="board-source"></p>
     </div>
 
-    <div class="panel" id="panel-teu">
+    <div class="panel">
       <div class="panel-head">
-        <h2>Global throughput</h2>
-        <p>Total container volume moving through ports worldwide</p>
+        <h2>Margin calculator</h2>
+        <p>Enter numbers from a real listing to see your net position</p>
       </div>
-      <div class="stat-block">
-        <div class="stat-figure" id="teu-figure">—</div>
-        <div class="stat-label">million TEU, latest year</div>
-        <div class="stat-delta" id="teu-delta">—</div>
-      </div>
-      <p class="panel-source" id="teu-source"></p>
-    </div>
-  </section>
-
-  <section class="panel panel-wide" id="panel-board">
-    <div class="panel-head">
-      <h2>Margin board</h2>
-      <p>Buy-reposition-sell routes — net margin per box after pickup charge</p>
-    </div>
-    <div class="board-wrap">
-      <table class="board" id="margin-board">
-        <thead>
-          <tr>
-            <th>Route</th>
-            <th>Size</th>
-            <th>Buy</th>
-            <th>Sell</th>
-            <th>Pickup chg.</th>
-            <th>Net margin</th>
-          </tr>
-        </thead>
-        <tbody id="board-body">
-          <tr><td colspan="6" class="board-loading">loading routes…</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="panel-source" id="board-source"></p>
-  </section>
-
-  <section class="panel panel-wide" id="panel-calc">
-    <div class="panel-head">
-      <h2>Margin calculator</h2>
-      <p>Run your own numbers — enter what a real listing quotes you</p>
-    </div>
-    <div class="calc-grid">
-      <label>Buy price (USD)
-        <input type="number" id="calc-buy" value="800" step="1">
-      </label>
-      <label>Sell price (USD)
-        <input type="number" id="calc-sell" value="1500" step="1">
-      </label>
-      <label>Pickup charge (USD)
-        <input type="number" id="calc-charge" value="0" step="1">
-        <span class="hint">positive = you receive it, negative = you pay it</span>
-      </label>
-      <div class="calc-result">
-        <span class="calc-result-label">Net margin</span>
-        <span class="calc-result-figure" id="calc-result">—</span>
+      <div class="calc-grid">
+        <label>Buy price (USD)<input type="number" id="calc-buy" value="800" step="1"></label>
+        <label>Sell price (USD)<input type="number" id="calc-sell" value="1500" step="1"></label>
+        <label>Pickup charge (USD)
+          <input type="number" id="calc-charge" value="0" step="1">
+          <span class="hint">positive = you receive it &nbsp;·&nbsp; negative = you pay it</span>
+        </label>
+        <div class="calc-result">
+          <span class="calc-result-label">Net margin</span>
+          <span class="calc-result-figure" id="calc-result">—</span>
+        </div>
       </div>
     </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>One-way lease reference rates</h2>
+        <p>Example pickup charges on specific lanes from published data. Positive = you receive this as the container owner.</p>
+      </div>
+      <div class="board-wrap">
+        <table class="board" id="lease-board">
+          <thead>
+            <tr><th>Route</th><th>Size</th><th>Pickup charge</th><th>Free days</th><th>Per diem after</th></tr>
+          </thead>
+          <tbody id="lease-body">
+            <tr><td colspan="5" class="board-loading">Loading rates…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </section>
 
-  <section class="panel panel-wide" id="panel-freight">
-    <div class="panel-head">
-      <h2>Freight rate snapshot</h2>
-      <p>Ocean freight reference points — not a live feed, see note</p>
+  <!-- GLOSSARY -->
+  <section id="tab-glossary" class="tab-content" role="tabpanel">
+    <div class="glossary-intro">
+      <p>Every term used in this dashboard and in the container trading business, explained in plain English.</p>
     </div>
-    <div id="freight-list"></div>
-    <p class="panel-source" id="freight-source"></p>
+    <div id="glossary-grid" class="glossary-grid"></div>
   </section>
 
 </main>
 
 <footer>
-  <p>Data refreshes hourly via a scheduled job — most panels change far less often than that, since the underlying sources update weekly, monthly, or per-research-update. See <code>README.md</code> for setup and source legitimacy notes.</p>
+  <p>Data refreshes hourly via GitHub Actions. Most panels update far less often — freight rates weekly, customs data monthly, World Bank TEU annually. See <code>README.md</code> for source details and how to extend the data layer.</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
