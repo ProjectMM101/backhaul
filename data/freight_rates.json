@@ -1,0 +1,8 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "source": "Container xChange blog, referencing market data from Jul 2024",
+  "snapshot": [
+    { "lane": "Shanghai - Rotterdam", "rate_usd_per_feu": 8056, "date": "2024-07-01", "note": "Spiked due to Red Sea diversions / Cape of Good Hope rerouting" }
+  ],
+  "note": "This is one historical reference point, not a live feed. The Freightos Baltic Index and Drewry World Container Index are the standard public weekly references but don't offer free open APIs — check their sites directly, or budget for a paid API tier if you want this panel live."
+}

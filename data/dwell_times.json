@@ -1,0 +1,12 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "source": "Vizion TradeView / SeaVantage public dwell-time snapshots, Sept 2025",
+  "note": "Seed data from research, not a live feed. Wire up scripts/fetch_dwell_times.py to a paid TradeView/port API key to automate this.",
+  "ports": [
+    { "port": "Los Angeles", "country": "USA", "arrival_to_berth_days": 0.6, "dwell_days": 5.7, "total_cycle_days": 7.7 },
+    { "port": "Hamburg", "country": "Germany", "arrival_to_berth_days": 1.2, "dwell_days": 3.7, "total_cycle_days": 6.2 },
+    { "port": "Shanghai", "country": "China", "arrival_to_berth_days": null, "dwell_days": null, "total_cycle_days": null, "note": "Under significant strain from congestion and vessel bunching; one carrier recorded ~3.25 day berth wait in Aug 2025. Precise dwell figure not publicly available." },
+    { "port": "Singapore", "country": "Singapore", "arrival_to_berth_days": 0, "dwell_days": null, "total_cycle_days": null, "note": "Frequently records zero waiting time; among best-performing ports globally." },
+    { "port": "Busan", "country": "South Korea", "arrival_to_berth_days": 0, "dwell_days": null, "total_cycle_days": null, "note": "Frequently records zero waiting time; among best-performing ports globally." }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "source": "UNCTAD Data Hub, 2024 figures",
+  "global_teu_millions": 920,
+  "global_yoy_growth_pct": 6.9,
+  "prior_years_growth_pct": { "2022": 0.6, "2023": 0.6 },
+  "note": "Per-country/per-port breakdown is available live via the World Bank API (indicator IS.SHP.GOOD.TU). scripts/fetch_worldbank_teu.py pulls this automatically — it's the one fully working, tested-format fetcher in this kit."
+}

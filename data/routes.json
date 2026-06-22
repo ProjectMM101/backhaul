@@ -1,0 +1,33 @@
+{
+  "updated": "2026-06-21T00:00:00Z",
+  "source": "Container xChange published case studies and blog leasing-rate posts, 2025",
+  "sign_convention": "pickup_charge_usd is from the container OWNER's perspective: positive = you receive this as lease revenue, negative = you pay this to get your container repositioned. Real quotes can go either way even within the same country pair — always check the live listing, don't assume direction from a general rule.",
+  "case_studies": [
+    {
+      "id": "in-cn-01",
+      "origin_port": "Nhava Sheva", "origin_country": "India",
+      "dest_port": "Shenzhen", "dest_country": "China",
+      "container_size": "20ft",
+      "buy_price_usd": 760,
+      "sell_price_usd": 1235,
+      "pickup_charge_usd": 150,
+      "note": "Published trading case study — container leased one-way to a shipper en route to Shenzhen, then sold. Not a live quote."
+    },
+    {
+      "id": "in-us-01",
+      "origin_port": "Nhava Sheva", "origin_country": "India",
+      "dest_port": "Minneapolis", "dest_country": "USA",
+      "container_size": "20ft",
+      "buy_price_usd": 760,
+      "sell_price_usd": 2500,
+      "pickup_charge_usd": 0,
+      "note": "Published trading case study — direct resale, no reposition leg detailed in the source. Likely excludes inland trucking/freight cost to reach Minneapolis, so treat this margin as optimistic."
+    }
+  ],
+  "lease_rate_references": [
+    { "origin_port": "Shanghai", "dest_port": "Rotterdam", "container_size": "20ft", "pickup_charge_usd": 270, "free_days": 68, "per_diem_usd": 3.5 },
+    { "origin_port": "Shanghai", "dest_port": "New York", "container_size": "40ft HC", "pickup_charge_usd": 1330, "free_days": 82, "per_diem_usd": 4 },
+    { "origin_port": "Shanghai", "dest_port": "Los Angeles", "container_size": "20ft", "pickup_charge_usd": 1460, "free_days": 135, "per_diem_usd": 5.5 },
+    { "origin_port": "Ningbo", "dest_port": "Toronto", "container_size": "20ft", "pickup_charge_usd": 1230, "free_days": 70, "per_diem_usd": 5 }
+  ]
+}

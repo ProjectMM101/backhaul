@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backhaul — container market watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">▣</span>
+    <div>
+      <h1>Backhaul</h1>
+      <p class="tagline">Container repositioning &amp; margin watch</p>
+    </div>
+  </div>
+  <div class="status">
+    <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+    <span id="last-updated">loading…</span>
+  </div>
+</header>
+
+<main>
+
+  <section class="panel-row">
+    <div class="panel" id="panel-dwell">
+      <div class="panel-head">
+        <h2>Port dwell time</h2>
+        <p>Days a container sits before pickup — rising dwell means containers are piling up</p>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="dwell-chart" role="img" aria-label="Bar chart of port dwell times"></canvas>
+      </div>
+      <p class="panel-source" id="dwell-source"></p>
+    </div>
+
+    <div class="panel" id="panel-teu">
+      <div class="panel-head">
+        <h2>Global throughput</h2>
+        <p>Total container volume moving through ports worldwide</p>
+      </div>
+      <div class="stat-block">
+        <div class="stat-figure" id="teu-figure">—</div>
+        <div class="stat-label">million TEU, latest year</div>
+        <div class="stat-delta" id="teu-delta">—</div>
+      </div>
+      <p class="panel-source" id="teu-source"></p>
+    </div>
+  </section>
+
+  <section class="panel panel-wide" id="panel-board">
+    <div class="panel-head">
+      <h2>Margin board</h2>
+      <p>Buy-reposition-sell routes — net margin per box after pickup charge</p>
+    </div>
+    <div class="board-wrap">
+      <table class="board" id="margin-board">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Size</th>
+            <th>Buy</th>
+            <th>Sell</th>
+            <th>Pickup chg.</th>
+            <th>Net margin</th>
+          </tr>
+        </thead>
+        <tbody id="board-body">
+          <tr><td colspan="6" class="board-loading">loading routes…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="panel-source" id="board-source"></p>
+  </section>
+
+  <section class="panel panel-wide" id="panel-calc">
+    <div class="panel-head">
+      <h2>Margin calculator</h2>
+      <p>Run your own numbers — enter what a real listing quotes you</p>
+    </div>
+    <div class="calc-grid">
+      <label>Buy price (USD)
+        <input type="number" id="calc-buy" value="800" step="1">
+      </label>
+      <label>Sell price (USD)
+        <input type="number" id="calc-sell" value="1500" step="1">
+      </label>
+      <label>Pickup charge (USD)
+        <input type="number" id="calc-charge" value="0" step="1">
+        <span class="hint">positive = you receive it, negative = you pay it</span>
+      </label>
+      <div class="calc-result">
+        <span class="calc-result-label">Net margin</span>
+        <span class="calc-result-figure" id="calc-result">—</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel panel-wide" id="panel-freight">
+    <div class="panel-head">
+      <h2>Freight rate snapshot</h2>
+      <p>Ocean freight reference points — not a live feed, see note</p>
+    </div>
+    <div id="freight-list"></div>
+    <p class="panel-source" id="freight-source"></p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Data refreshes hourly via a scheduled job — most panels change far less often than that, since the underlying sources update weekly, monthly, or per-research-update. See <code>README.md</code> for setup and source legitimacy notes.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

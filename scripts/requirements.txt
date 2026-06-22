@@ -1,0 +1,4 @@
+# fetch_worldbank_teu.py uses only the Python standard library — nothing to install.
+#
+# Add packages here as you wire up more fetchers, e.g.:
+# requests>=2.31
