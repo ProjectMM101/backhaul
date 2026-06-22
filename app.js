@@ -776,32 +776,58 @@ function renderFreshness() {
 
 // ═══ AIS SHIPS (AISStream.io) ════════════════════════════════════════════════
 
+const AIS_MIN_ZOOM = 5;
+
+function sendAISSubscription(apiKey) {
+  if (!aisSocket || aisSocket.readyState !== WebSocket.OPEN) return;
+  const b = mapInstance.getBounds();
+  // Cap bbox to ±20° from centre — full-world subscription floods the connection
+  const maxDelta = 20;
+  const cLat = (b.getNorth() + b.getSouth()) / 2;
+  const cLng = (b.getEast()  + b.getWest())  / 2;
+  const south = Math.max(-85, cLat - maxDelta);
+  const north = Math.min(85,  cLat + maxDelta);
+  const west  = cLng - maxDelta;
+  const east  = cLng + maxDelta;
+  aisSocket.send(JSON.stringify({
+    APIKey: apiKey,
+    BoundingBoxes: [[[south, west], [north, east]]],
+    FilterMessageTypes: ['PositionReport'],
+  }));
+}
+
 function connectAIS(apiKey) {
-  disconnectAIS();
   const statusEl = document.getElementById('ais-status');
-  statusEl.textContent = 'Connecting…';
+  const zoom = mapInstance.getZoom();
+
+  if (zoom < AIS_MIN_ZOOM) {
+    if (statusEl) {
+      statusEl.textContent = `Zoom in first (need zoom ${AIS_MIN_ZOOM}+, currently ${zoom.toFixed(1)}).`;
+      statusEl.style.color = 'var(--amber)';
+    }
+    return;
+  }
+
+  disconnectAIS();
+  if (statusEl) { statusEl.textContent = 'Connecting…'; statusEl.style.color = 'var(--muted)'; }
 
   aisSocket = new WebSocket('wss://stream.aisstream.io/v0/stream');
 
-  aisSocket.onopen = () => {
-    const bounds = mapInstance.getBounds();
-    aisSocket.send(JSON.stringify({
-      APIKey: apiKey,
-      BoundingBoxes: [[[bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]]],
-      FilterMessageTypes: ['PositionReport'],
-    }));
-    statusEl.textContent = '● Connected — showing vessels in view';
-    statusEl.style.color = 'var(--teal)';
+  // Must subscribe within 3 seconds or server closes the connection
+  const subTimeout = setTimeout(() => {
+    if (aisSocket && aisSocket.readyState !== WebSocket.OPEN) {
+      if (statusEl) { statusEl.textContent = 'Timed out — check key and try again.'; statusEl.style.color = 'var(--red)'; }
+    }
+  }, 5000);
 
-    // Update subscription when map moves
-    mapInstance.on('moveend', () => {
-      if (aisSocket && aisSocket.readyState === WebSocket.OPEN) {
-        const b = mapInstance.getBounds();
-        aisSocket.send(JSON.stringify({
-          APIKey: apiKey,
-          BoundingBoxes: [[[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]]],
-          FilterMessageTypes: ['PositionReport'],
-        }));
+  aisSocket.onopen = () => {
+    clearTimeout(subTimeout);
+    sendAISSubscription(apiKey);
+    if (statusEl) { statusEl.textContent = '● Connected — ships loading…'; statusEl.style.color = 'var(--teal)'; }
+
+    mapInstance.on('moveend.ais', () => {
+      if (aisSocket && aisSocket.readyState === WebSocket.OPEN && mapInstance.getZoom() >= AIS_MIN_ZOOM) {
+        sendAISSubscription(apiKey);
       }
     });
   };
@@ -812,24 +838,34 @@ function connectAIS(apiKey) {
       const pos  = data?.Message?.PositionReport;
       if (!pos) return;
       const { UserID: mmsi, Latitude: lat, Longitude: lng, Sog: speed, Cog: course } = pos;
-      if (!lat || !lng) return;
+      if (!lat || !lng || lat === 0 || lng === 0) return;
 
       if (shipMarkers[mmsi]) {
         shipMarkers[mmsi].setLatLng([lat, lng]);
       } else {
         const m = L.circleMarker([lat, lng], {
-          radius: 3, fillColor: '#4FB6AC', color: '#0D1B24',
-          weight: 1, opacity: 1, fillOpacity: 0.9,
+          radius: 3, fillColor: '#4FB6AC', color: '#0D1B24', weight: 1, opacity: 1, fillOpacity: 0.9,
         });
-        m.bindPopup(`<b>MMSI:</b> ${mmsi}<br><b>Speed:</b> ${speed ? speed.toFixed(1) + ' kn' : '—'}<br><b>Course:</b> ${course ? Math.round(course) + '°' : '—'}<br><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:${mmsi}" target="_blank" rel="noopener" style="color:var(--teal)">View on MarineTraffic →</a>`);
+        m.bindPopup(`<b>MMSI:</b> ${mmsi}<br><b>Speed:</b> ${speed != null ? speed.toFixed(1) + ' kn' : '—'}<br><b>Course:</b> ${course != null ? Math.round(course) + '°' : '—'}<br><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:${mmsi}" target="_blank" rel="noopener" style="color:var(--teal)">View on MarineTraffic →</a>`);
         m.addTo(mapInstance);
         shipMarkers[mmsi] = m;
       }
+
+      const count = Object.keys(shipMarkers).length;
+      if (statusEl && count > 0) { statusEl.textContent = `● ${count} vessels in view`; statusEl.style.color = 'var(--teal)'; }
     } catch {/* ignore parse errors */}
   };
 
-  aisSocket.onerror = () => { statusEl.textContent = 'Connection error — check API key.'; statusEl.style.color = 'var(--red)'; };
-  aisSocket.onclose = () => { if (layerVisible.ships) statusEl.textContent = 'Disconnected.'; };
+  aisSocket.onerror = () => {
+    if (statusEl) { statusEl.textContent = 'Error — check your API key.'; statusEl.style.color = 'var(--red)'; }
+  };
+  aisSocket.onclose = (e) => {
+    mapInstance.off('moveend.ais');
+    if (layerVisible.ships && statusEl) {
+      statusEl.textContent = `Disconnected (${e.code}). Toggle ships off then on to retry.`;
+      statusEl.style.color = 'var(--red)';
+    }
+  };
 }
 
 function disconnectAIS() {
