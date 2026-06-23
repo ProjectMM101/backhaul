@@ -1,7 +1,7 @@
 {
   "source": "Freightos Baltic Index (FBX) via Far Point Global",
-  "as_of": "2026-06-22T00:00:00Z",
-  "note": "Rates per FEU (40ft container). 20ft (TEU) estimated at 55% of FEU rate. THC and fees are estimates — get a real quote before committing.",
+  "as_of": "2026-06-23T11:44:44Z",
+  "note": "Rates per FEU (40ft container). 20ft (TEU) estimated at 55% of FEU rate. THC and fees are estimates \u2014 get a real quote before committing.",
   "routes": [
     {
       "fbx_code": "FBX01",
