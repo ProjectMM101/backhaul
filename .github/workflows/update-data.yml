@@ -1,32 +1,30 @@
-name: Update container market data
+name: Hourly data refresh
 
 on:
   schedule:
-    - cron: '0 * * * *'   # every hour, on the hour, UTC
-  workflow_dispatch: {}     # lets you trigger it manually from the Actions tab
-
-permissions:
-  contents: write
+    - cron: "0 * * * *"
+  workflow_dispatch:
 
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - name: Check out repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Run fetchers
         run: |
           python scripts/fetch_worldbank_teu.py
           python scripts/fetch_portwatch.py
-          # Add more fetch scripts here as you build them, e.g.:
-          # python scripts/fetch_dwell_times.py
-          # python scripts/fetch_ais_vessels.py
+          python scripts/fetch_fbx_rates.py
 
       - name: Commit updated data if anything changed
         run: |
