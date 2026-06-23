@@ -187,6 +187,62 @@
       </div>
     </div>
 
+    <!-- FBX OCEAN FREIGHT CALCULATOR -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Ocean freight calculator <span style="font-size:11px;font-weight:500;background:var(--teal);color:#0D1B24;padding:2px 7px;border-radius:10px;vertical-align:middle;margin-left:6px">live FBX</span></h2>
+        <p>Pick a trade route — freight cost fills in automatically from live Freightos Baltic Index data. Just enter what you paid for the box.</p>
+      </div>
+      <p class="panel-source" id="fbx-as-of" style="margin-bottom:16px"></p>
+
+      <div class="calc-v2">
+        <div class="calc-inputs" style="gap:12px">
+
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label class="calc-label" for="fbx-route">Trade route</label>
+            <select id="fbx-route" class="ci" style="width:100%;padding:8px 10px;font-size:14px">
+              <option value="">— select a route —</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label class="calc-label" for="fbx-size">Container size</label>
+              <select id="fbx-size" class="ci" style="padding:8px 10px;font-size:14px">
+                <option value="FEU">40 ft (FEU)</option>
+                <option value="TEU">20 ft (TEU)</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label class="calc-label" for="fbx-buy">Purchase price (USD)</label>
+              <input type="number" id="fbx-buy" class="ci" placeholder="e.g. 800" min="0" step="50">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label class="calc-label" for="fbx-sell">Sell price (USD) <span class="hint">optional</span></label>
+              <input type="number" id="fbx-sell" class="ci" placeholder="e.g. 2500" min="0" step="50">
+            </div>
+          </div>
+
+        </div>
+
+        <div id="fbx-results" hidden>
+          <div class="calc-breakdown" id="fbx-breakdown">
+            <div class="breakdown-col">
+              <div class="breakdown-head">Shipping costs</div>
+              <div class="breakdown-rows" id="fbx-cost-rows"></div>
+              <div class="breakdown-total" id="fbx-cost-total"></div>
+            </div>
+            <div class="breakdown-col">
+              <div class="breakdown-head">Summary</div>
+              <div class="breakdown-rows" id="fbx-summary-rows"></div>
+            </div>
+          </div>
+          <div class="calc-net" id="fbx-net"></div>
+          <p class="panel-source">FBX rates per FEU (40ft). 20ft estimated at 55% of FEU rate. THC and ancillary fees are estimates — always get a live quote. Source: Freightos Baltic Index via Baltic Exchange.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- LEASE RATES -->
     <div class="panel">
       <div class="panel-head">

@@ -437,6 +437,106 @@ function initEnhancedCalculator(routeData) {
   recalc();
 }
 
+// ═══ FBX OCEAN FREIGHT CALCULATOR ════════════════════════════════════════════
+
+function initFBXCalculator(data) {
+  if (!data || !data.routes) return;
+
+  const select = document.getElementById('fbx-route');
+  if (!select) return;
+
+  const groups = { Pacific: [], Suez: [], Atlantic: [] };
+  const regionMap = {
+    FBX01:'Pacific', FBX02:'Pacific', FBX03:'Pacific', FBX04:'Pacific',
+    FBX11:'Suez',    FBX12:'Suez',    FBX13:'Suez',    FBX14:'Suez',
+    FBX21:'Atlantic',FBX22:'Atlantic',FBX24:'Atlantic',FBX26:'Atlantic',
+  };
+
+  data.routes.forEach(r => {
+    const g = regionMap[r.fbx_code] || 'Other';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(r);
+  });
+
+  select.innerHTML = '<option value="">— select a route —</option>';
+  Object.entries(groups).forEach(([name, routes]) => {
+    if (!routes.length) return;
+    const og = document.createElement('optgroup');
+    og.label = name;
+    routes.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.fbx_code;
+      opt.textContent = `${r.fbx_code}  ${r.label}  ($${r.rate_usd_feu.toLocaleString()}/FEU)`;
+      og.appendChild(opt);
+    });
+    select.appendChild(og);
+  });
+
+  const asOf = document.getElementById('fbx-as-of');
+  if (asOf && data.as_of) {
+    const d   = new Date(data.as_of);
+    const age = Math.round((Date.now() - d) / 60000);
+    asOf.textContent = `FBX rates as of ${d.toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZoneName:'short' })} · ${age < 90 ? age + ' min ago' : '~' + Math.round(age / 60) + ' hr ago'} · refreshed hourly`;
+  }
+
+  ['fbx-route','fbx-size','fbx-buy','fbx-sell'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input',  () => recalcFBX(data));
+      el.addEventListener('change', () => recalcFBX(data));
+    }
+  });
+}
+
+function recalcFBX(data) {
+  const routeCode = document.getElementById('fbx-route')?.value;
+  const size      = document.getElementById('fbx-size')?.value  || 'FEU';
+  const buy       = parseFloat(document.getElementById('fbx-buy')?.value)  || 0;
+  const sell      = parseFloat(document.getElementById('fbx-sell')?.value) || 0;
+
+  const results = document.getElementById('fbx-results');
+  if (!routeCode) { results.hidden = true; return; }
+
+  const route = data.routes.find(r => r.fbx_code === routeCode);
+  if (!route)   { results.hidden = true; return; }
+
+  const sf        = size === 'TEU' ? 0.55 : 1.0;
+  const freight   = Math.round(route.rate_usd_feu    * sf);
+  const originTHC = Math.round(route.origin_thc_usd  * sf);
+  const destTHC   = Math.round(route.dest_thc_usd    * sf);
+  const docs      = route.documentation_usd;
+  const other     = Math.round(route.other_fees_usd  * sf);
+  const totalShip = freight + originTHC + destTHC + docs + other;
+  const totalBox  = buy + totalShip;
+
+  document.getElementById('fbx-cost-rows').innerHTML = `
+    <div class="breakdown-row"><span class="br-label">Ocean freight (FBX ${routeCode})</span><span class="br-val" style="color:var(--teal)">${fmtUsd(freight)}</span></div>
+    <div class="breakdown-row"><span class="br-label">THC origin + destination</span><span class="br-val">${fmtUsd(originTHC + destTHC)}</span></div>
+    <div class="breakdown-row"><span class="br-label">Documentation</span><span class="br-val">${fmtUsd(docs)}</span></div>
+    <div class="breakdown-row"><span class="br-label">Other fees</span><span class="br-val">${fmtUsd(other)}</span></div>`;
+
+  document.getElementById('fbx-cost-total').innerHTML =
+    `<span>Total shipping cost</span><span class="br-val">${fmtUsd(totalShip)}</span>`;
+
+  document.getElementById('fbx-summary-rows').innerHTML = `
+    <div class="breakdown-row"><span class="br-label">Container purchase</span><span class="br-val">${fmtUsd(buy)}</span></div>
+    <div class="breakdown-row"><span class="br-label">Total shipping</span><span class="br-val">${fmtUsd(totalShip)}</span></div>
+    <div class="breakdown-row"><span class="br-label">Transit time</span><span class="br-val">~${route.transit_days_est} days</span></div>
+    <div class="breakdown-row"><span class="br-label">Break-even sell price</span><span class="br-val" style="color:#E8A33D">${fmtUsd(totalBox)}</span></div>`;
+
+  let netHtml = '';
+  if (sell > 0) {
+    const net = sell - totalBox;
+    const roi = totalBox > 0 ? (net / totalBox * 100) : null;
+    netHtml = `
+      <div class="net-card"><div class="net-card-label">Net margin</div><div class="net-card-value ${net >= 0 ? 'positive' : 'negative'}">${fmtUsd(net)}</div></div>
+      <div class="net-card"><div class="net-card-label">ROI on capital</div><div class="net-card-value ${roi !== null && roi >= 0 ? 'positive' : 'negative'}">${roi !== null ? fmtPct(roi) : '—'}</div></div>
+      <div class="net-card"><div class="net-card-label">Capital deployed</div><div class="net-card-value neutral">${fmtUsd(totalBox)}</div></div>`;
+  }
+  document.getElementById('fbx-net').innerHTML = netHtml;
+  results.hidden = false;
+}
+
 // ═══ LIVE FEED ═══════════════════════════════════════════════════════════════
 
 let liveChart = null;
@@ -1048,11 +1148,12 @@ function setStatus(timestamps) {
 
 async function init() {
   try {
-    const [ports, teu, routes, portwatch] = await Promise.all([
+    const [ports, teu, routes, portwatch, freightRates] = await Promise.all([
       loadJSON('data/ports.json'),
       loadJSON('data/teu_throughput.json'),
       loadJSON('data/routes.json'),
       loadJSON('data/portwatch.json'),
+      loadJSON('data/freight_rates.json').catch(() => null),
     ]);
 
     allTimestamps = { ports: ports.updated, teu: teu.updated, routes: routes.updated, portwatch: portwatch.updated };
@@ -1066,6 +1167,7 @@ async function init() {
     initTabs({ ports, teu, routes });
     initAI();
     setStatus([ports.updated, teu.updated, routes.updated, portwatch.updated]);
+    if (freightRates) initFBXCalculator(freightRates);
 
   } catch (err) {
     console.error('Dashboard init error:', err);
