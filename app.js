@@ -84,19 +84,31 @@ function buildPortTable(ports) {
 
 function renderOverview(ports, teu) {
   allPorts = ports.ports;
-  const surplus = allPorts.filter(p => p.status === 'surplus').length;
-  const deficit = allPorts.filter(p => p.status === 'deficit').length;
+
+  // Sort: surplus by dwell desc (most backed up = best buy), deficit by TEU desc (biggest markets first)
+  // watch: disrupted first, then tightening, then by dwell desc
+  const surplusPorts = [...allPorts.filter(p => p.status === 'surplus')]
+    .sort((a, b) => (b.dwell_days || 0) - (a.dwell_days || 0));
+  const deficitPorts = [...allPorts.filter(p => p.status === 'deficit')]
+    .sort((a, b) => (b.monthly_teu_thousands || 0) - (a.monthly_teu_thousands || 0));
+  const watchPorts   = [...allPorts.filter(p => p.status === 'tightening' || p.status === 'disrupted')]
+    .sort((a, b) => {
+      if (a.status === 'disrupted' && b.status !== 'disrupted') return -1;
+      if (b.status === 'disrupted' && a.status !== 'disrupted') return  1;
+      return (b.dwell_days || 0) - (a.dwell_days || 0);
+    });
 
   document.getElementById('overview-stats').innerHTML = `
     <div class="stat-card"><div class="stat-card-label">Global TEU handled</div><div class="stat-card-value">${teu.global_teu_millions}M</div><div class="stat-card-sub">+${teu.global_yoy_growth_pct}% YoY · ${teu.source.split(',')[0]}</div></div>
-    <div class="stat-card"><div class="stat-card-label">Ports tracked</div><div class="stat-card-value">${allPorts.length}</div><div class="stat-card-sub">${surplus} surplus · ${deficit} deficit</div></div>
+    <div class="stat-card"><div class="stat-card-label">Ports tracked</div><div class="stat-card-value">${allPorts.length}</div><div class="stat-card-sub">${surplusPorts.length} surplus · ${deficitPorts.length} deficit</div></div>
     <div class="stat-card"><div class="stat-card-label">Primary strategy</div><div class="stat-card-value" style="font-size:18px;color:var(--teal)">Buy ↓ Sell ↑</div><div class="stat-card-sub">surplus → deficit lane</div></div>
     <div class="stat-card"><div class="stat-card-label">Live vessel data</div><div class="stat-card-value" style="font-size:18px">IMF</div><div class="stat-card-sub">PortWatch · 2,065 ports</div></div>`;
 
-  document.getElementById('buy-ports').innerHTML   = buildPortTable(allPorts.filter(p => p.status === 'surplus'));
-  document.getElementById('sell-ports').innerHTML  = buildPortTable(allPorts.filter(p => p.status === 'deficit'));
-  document.getElementById('watch-ports').innerHTML = buildPortTable(allPorts.filter(p => p.status === 'tightening' || p.status === 'disrupted'));
-  document.getElementById('overview-source').textContent = `Ports: ${ports.notes.data_quality} · TEU: ${teu.source}`;
+  document.getElementById('buy-ports').innerHTML   = buildPortTable(surplusPorts);
+  document.getElementById('sell-ports').innerHTML  = buildPortTable(deficitPorts);
+  document.getElementById('watch-ports').innerHTML = buildPortTable(watchPorts);
+  document.getElementById('overview-source').innerHTML =
+    `Ports sorted by dwell time (highest first) · ${ports.notes.data_quality} · TEU: ${teu.source} · data ${ageBadge(ports.updated)}`;
 
   setupOverviewSearch();
 }
@@ -109,6 +121,95 @@ function setupOverviewSearch() {
       row.classList.toggle('hidden', q.length > 0 && !row.dataset.port.includes(q));
     });
   });
+}
+
+// ═══ GLANCE BAR ══════════════════════════════════════════════════════════════
+
+function renderGlanceBar(ports, freightRates) {
+  const allP      = ports.ports;
+  const surplus   = allP.filter(p => p.status === 'surplus').length;
+  const deficit   = allP.filter(p => p.status === 'deficit').length;
+  const disrupted = allP.filter(p => p.status === 'disrupted').length;
+  const tighten   = allP.filter(p => p.status === 'tightening').length;
+
+  let cheapLane = null, priceyLane = null;
+  if (freightRates?.routes?.length) {
+    cheapLane  = freightRates.routes.reduce((a, b) => a.rate_usd_feu < b.rate_usd_feu ? a : b);
+    priceyLane = freightRates.routes.reduce((a, b) => a.rate_usd_feu > b.rate_usd_feu ? a : b);
+  }
+
+  const items = document.getElementById('glance-items');
+  if (!items) return;
+
+  const dot = (color) => `<span class="gi-dot" style="background:${color}"></span>`;
+
+  items.innerHTML = `
+    <div class="gi">${dot('#E8A33D')}<span class="gi-val">${surplus}</span><span class="gi-label">surplus</span></div>
+    <span class="gi-sep">|</span>
+    <div class="gi">${dot('#4FB6AC')}<span class="gi-val">${deficit}</span><span class="gi-label">deficit</span></div>
+    ${tighten  ? `<span class="gi-sep">|</span><div class="gi">${dot('#A855F7')}<span class="gi-val">${tighten}</span><span class="gi-label">tightening</span></div>` : ''}
+    ${disrupted? `<span class="gi-sep">|</span><div class="gi">${dot('#D9695A')}<span class="gi-val">${disrupted}</span><span class="gi-label">disrupted</span></div>` : ''}
+    ${cheapLane ? `
+      <span class="gi-sep">|</span>
+      <div class="gi">
+        <span class="gi-label">cheapest lane</span>
+        <span class="gi-val" style="color:#4FB6AC">${cheapLane.fbx_code}</span>
+        <span class="gi-label">${cheapLane.from.split('/')[0].trim()} → ${cheapLane.to}</span>
+        <span class="gi-val" style="color:#4FB6AC">$${cheapLane.rate_usd_feu.toLocaleString()}/FEU</span>
+      </div>` : ''}
+    ${priceyLane ? `
+      <span class="gi-sep">|</span>
+      <div class="gi">
+        <span class="gi-label">highest rate</span>
+        <span class="gi-val" style="color:#E8A33D">${priceyLane.fbx_code}</span>
+        <span class="gi-label">${priceyLane.from.split('/')[0].trim()} → ${priceyLane.to}</span>
+        <span class="gi-val" style="color:#E8A33D">$${priceyLane.rate_usd_feu.toLocaleString()}/FEU</span>
+      </div>` : ''}
+  `;
+
+  const tsEl = document.getElementById('glance-ts');
+  if (tsEl) {
+    const now = new Date();
+    tsEl.textContent = `refreshed ${now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' })}`;
+  }
+}
+
+// ═══ REFRESH ═════════════════════════════════════════════════════════════════
+
+async function refreshAll() {
+  const btn = document.getElementById('refresh-btn');
+  if (btn) { btn.textContent = '↻ …'; btn.disabled = true; }
+
+  try {
+    const [ports, teu, routes, portwatch, freightRates] = await Promise.all([
+      loadJSON('data/ports.json'),
+      loadJSON('data/teu_throughput.json'),
+      loadJSON('data/routes.json'),
+      loadJSON('data/portwatch.json'),
+      loadJSON('data/freight_rates.json').catch(() => null),
+    ]);
+
+    allTimestamps = { ports: ports.updated, teu: teu.updated, routes: routes.updated, portwatch: portwatch.updated };
+    buildPortCoordLookup(ports.ports);
+    renderOverview(ports, teu);
+    renderRoutes(routes);
+    renderLiveFeed(portwatch);
+    buildPortWatchLookup(portwatch);
+    setStatus([ports.updated, teu.updated, routes.updated, portwatch.updated]);
+    renderGlanceBar(ports, freightRates);
+    if (freightRates) initFBXCalculator(freightRates);
+
+    // Flash status dot green briefly
+    const dot = document.getElementById('status-dot');
+    if (dot) { dot.style.background = '#6ee09e'; setTimeout(() => dot.style.background = '', 2000); }
+
+  } catch (err) {
+    console.error('Refresh error:', err);
+    const dot = document.getElementById('status-dot');
+    if (dot) dot.style.background = '#D9695A';
+  }
+
+  if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
 }
 
 // ═══ MAP ══════════════════════════════════════════════════════════════════════
@@ -360,6 +461,8 @@ function renderRoutes(data) {
     </tr>`;
   }).join('');
   document.getElementById('board-source').textContent = `Source: ${data.source}. ${data.sign_convention} Hover rows for notes.`;
+  const bts = document.getElementById('board-ts');
+  if (bts) bts.innerHTML = `Routes data ${ageBadge(data.updated)}`;
 
   const lbody = document.getElementById('lease-body');
   lbody.innerHTML = data.lease_rate_references.map(r => `<tr>
@@ -556,9 +659,15 @@ function renderLiveFeed(data) {
 
   document.getElementById('live-empty').hidden = true;
 
-  // Sort by avg calls descending
+  // Sort: rising first, then stable, then falling — most dynamic data at top
+  const trendOrder = { 'rising': 0, 'stable': 1, 'falling': 2 };
   const sorted = [...ports].filter(p => p.avg_container_calls_14d !== null)
-    .sort((a, b) => b.avg_container_calls_14d - a.avg_container_calls_14d)
+    .sort((a, b) => {
+      const tA = trendOrder[a.trend_vs_prior_14d] ?? 1;
+      const tB = trendOrder[b.trend_vs_prior_14d] ?? 1;
+      if (tA !== tB) return tA - tB;
+      return b.avg_container_calls_14d - a.avg_container_calls_14d;
+    })
     .slice(0, 25);
 
   // Bar chart
@@ -1168,6 +1277,8 @@ async function init() {
     initAI();
     setStatus([ports.updated, teu.updated, routes.updated, portwatch.updated]);
     if (freightRates) initFBXCalculator(freightRates);
+    renderGlanceBar(ports, freightRates);
+    document.getElementById('refresh-btn')?.addEventListener('click', refreshAll);
 
   } catch (err) {
     console.error('Dashboard init error:', err);
@@ -1176,4 +1287,3 @@ async function init() {
   }
 }
 
-init();
