@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T07:56:57Z",
+  "updated": "2026-07-08T15:54:55Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-06-24 to 2026-07-08",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -286,24 +286,6 @@
     {
       "portname": "Guangzhou Nansha LNG Terminal",
       "ISO3": "CHN",
-      "avg_container_calls_14d": 0.0,
-      "avg_imports_14d": 0.0,
-      "avg_exports_14d": 0.0,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Singapore",
-      "ISO3": "SGP",
-      "avg_container_calls_14d": 39.0,
-      "avg_imports_14d": 614988.2,
-      "avg_exports_14d": 809193.8,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Singapore - Offshore Oil Terminal 1",
-      "ISO3": "SGP",
       "avg_container_calls_14d": 0.0,
       "avg_imports_14d": 0.0,
       "avg_exports_14d": 0.0,
