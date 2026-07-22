@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-22T10:32:58Z",
+  "updated": "2026-07-22T12:43:57Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-07-08 to 2026-07-22",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
