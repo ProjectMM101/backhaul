@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18T12:59:58Z",
+  "updated": "2026-08-18T13:54:30Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-04 to 2026-08-18",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -32,11 +32,47 @@
       "trend_vs_prior_14d": "stable"
     },
     {
+      "portname": "Seattle",
+      "ISO3": "USA",
+      "avg_container_calls_14d": 0.6,
+      "avg_imports_14d": 6503.2,
+      "avg_exports_14d": 3684.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Tacoma",
+      "ISO3": "USA",
+      "avg_container_calls_14d": 1.4,
+      "avg_imports_14d": 18495.9,
+      "avg_exports_14d": 13057.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Houston (US-TX)",
+      "ISO3": "USA",
+      "avg_container_calls_14d": 2.6,
+      "avg_imports_14d": 67890.4,
+      "avg_exports_14d": 57827.4,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
       "portname": "Rotterdam",
       "ISO3": "NLD",
       "avg_container_calls_14d": 17.1,
       "avg_imports_14d": 137121.5,
       "avg_exports_14d": 145350.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Hamburg",
+      "ISO3": "DEU",
+      "avg_container_calls_14d": 9.4,
+      "avg_imports_14d": 234683.2,
+      "avg_exports_14d": 150751.9,
       "days_with_data": 11,
       "trend_vs_prior_14d": "stable"
     },
@@ -77,6 +113,15 @@
       "trend_vs_prior_14d": "stable"
     },
     {
+      "portname": "Valencia",
+      "ISO3": "ESP",
+      "avg_container_calls_14d": 7.9,
+      "avg_imports_14d": 57142.7,
+      "avg_exports_14d": 44034.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
       "portname": "Dubai",
       "ISO3": "ARE",
       "avg_container_calls_14d": 0.0,
@@ -93,6 +138,285 @@
       "avg_exports_14d": 29598.1,
       "days_with_data": 11,
       "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Chennai (Madras)",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 1.3,
+      "avg_imports_14d": 7449.5,
+      "avg_exports_14d": 86.4,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Mumbai",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 7.5,
+      "avg_imports_14d": 169993.1,
+      "avg_exports_14d": 109603.4,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Mundra",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 7.0,
+      "avg_imports_14d": 19176.8,
+      "avg_exports_14d": 45377.8,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Colombo",
+      "ISO3": "LKA",
+      "avg_container_calls_14d": 9.4,
+      "avg_imports_14d": 30168.5,
+      "avg_exports_14d": 23620.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Durban",
+      "ISO3": "ZAF",
+      "avg_container_calls_14d": 1.8,
+      "avg_imports_14d": 59260.1,
+      "avg_exports_14d": 24855.2,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Mombasa",
+      "ISO3": "KEN",
+      "avg_container_calls_14d": 1.5,
+      "avg_imports_14d": 14323.8,
+      "avg_exports_14d": 359.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Qingdao Port",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 19.4,
+      "avg_imports_14d": 234125.5,
+      "avg_exports_14d": 689681.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Shanghai",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 21.8,
+      "avg_imports_14d": 292624.8,
+      "avg_exports_14d": 235700.9,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Shekou (Shenzhen)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.6,
+      "avg_imports_14d": 7947.1,
+      "avg_exports_14d": 781380.8,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Tianjin Xin Gang",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 9.2,
+      "avg_imports_14d": 194997.6,
+      "avg_exports_14d": 457720.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Xiamen",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 12.7,
+      "avg_imports_14d": 191844.9,
+      "avg_exports_14d": 235171.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Yantian",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.1,
+      "avg_imports_14d": 9237.0,
+      "avg_exports_14d": 109910.9,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou (Nansha)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 17.3,
+      "avg_imports_14d": 40545.5,
+      "avg_exports_14d": 87617.1,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Ningbo",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 20.5,
+      "avg_imports_14d": 476661.9,
+      "avg_exports_14d": 415566.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Shanghai (Yangshan)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 6.3,
+      "avg_imports_14d": 157824.8,
+      "avg_exports_14d": 319337.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Guangzhou (Huangpu)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 0.5,
+      "avg_imports_14d": 1066.2,
+      "avg_exports_14d": 84.1,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Singapore",
+      "ISO3": "SGP",
+      "avg_container_calls_14d": 35.6,
+      "avg_imports_14d": 677561.6,
+      "avg_exports_14d": 760809.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Port Klang",
+      "ISO3": "MYS",
+      "avg_container_calls_14d": 18.6,
+      "avg_imports_14d": 111157.4,
+      "avg_exports_14d": 82104.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Tanjung Pelepas",
+      "ISO3": "MYS",
+      "avg_container_calls_14d": 8.6,
+      "avg_imports_14d": 8231.1,
+      "avg_exports_14d": 11483.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Incheon",
+      "ISO3": "KOR",
+      "avg_container_calls_14d": 6.5,
+      "avg_imports_14d": 14392.5,
+      "avg_exports_14d": 2362.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Busan",
+      "ISO3": "KOR",
+      "avg_container_calls_14d": 27.6,
+      "avg_imports_14d": 174252.6,
+      "avg_exports_14d": 142342.9,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Keelung",
+      "ISO3": "TWN",
+      "avg_container_calls_14d": 5.2,
+      "avg_imports_14d": 29250.2,
+      "avg_exports_14d": 38971.6,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Kaohsiung",
+      "ISO3": "TWN",
+      "avg_container_calls_14d": 15.5,
+      "avg_imports_14d": 118855.7,
+      "avg_exports_14d": 161166.6,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Yokohama",
+      "ISO3": "JPN",
+      "avg_container_calls_14d": 11.6,
+      "avg_imports_14d": 44133.0,
+      "avg_exports_14d": 34615.9,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Osaka",
+      "ISO3": "JPN",
+      "avg_container_calls_14d": 7.0,
+      "avg_imports_14d": 36495.1,
+      "avg_exports_14d": 41932.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Tokyo",
+      "ISO3": "JPN",
+      "avg_container_calls_14d": 11.7,
+      "avg_imports_14d": 66188.6,
+      "avg_exports_14d": 59377.5,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Chittagong",
+      "ISO3": "BGD",
+      "avg_container_calls_14d": 3.6,
+      "avg_imports_14d": 19009.7,
+      "avg_exports_14d": 526.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Laem Chabang",
+      "ISO3": "THA",
+      "avg_container_calls_14d": 13.5,
+      "avg_imports_14d": 134126.6,
+      "avg_exports_14d": 120652.4,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Manila",
+      "ISO3": "PHL",
+      "avg_container_calls_14d": 6.9,
+      "avg_imports_14d": 36396.8,
+      "avg_exports_14d": 937.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Tanjung Priok",
+      "ISO3": "IDN",
+      "avg_container_calls_14d": 11.5,
+      "avg_imports_14d": 36456.6,
+      "avg_exports_14d": 12915.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Piraeus",
+      "ISO3": "GRC",
+      "avg_container_calls_14d": 6.4,
+      "avg_imports_14d": 106673.8,
+      "avg_exports_14d": 58933.9,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
     }
   ]
 }
