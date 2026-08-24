@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24T22:35:00Z",
+  "updated": "2026-08-24T23:28:54Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-10 to 2026-08-24",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -77,6 +77,24 @@
       "trend_vs_prior_14d": "stable"
     },
     {
+      "portname": "Antwerp",
+      "ISO3": "BEL",
+      "avg_container_calls_14d": 12.4,
+      "avg_imports_14d": 144604.4,
+      "avg_exports_14d": 279331.2,
+      "days_with_data": 5,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Felixstowe",
+      "ISO3": "GBR",
+      "avg_container_calls_14d": 1.6,
+      "avg_imports_14d": 25562.8,
+      "avg_exports_14d": 11291.8,
+      "days_with_data": 5,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
       "portname": "Algeciras",
       "ISO3": "ESP",
       "avg_container_calls_14d": 6.6,
@@ -147,6 +165,24 @@
       "avg_exports_14d": 46849.4,
       "days_with_data": 5,
       "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Colombo",
+      "ISO3": "LKA",
+      "avg_container_calls_14d": 9.6,
+      "avg_imports_14d": 31222.4,
+      "avg_exports_14d": 26674.8,
+      "days_with_data": 5,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Durban",
+      "ISO3": "ZAF",
+      "avg_container_calls_14d": 1.6,
+      "avg_imports_14d": 36813.4,
+      "avg_exports_14d": 19402.2,
+      "days_with_data": 5,
+      "trend_vs_prior_14d": "falling"
     },
     {
       "portname": "Mombasa",
@@ -388,6 +424,15 @@
       "avg_container_calls_14d": 12.0,
       "avg_imports_14d": 36498.4,
       "avg_exports_14d": 13534.2,
+      "days_with_data": 5,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Piraeus",
+      "ISO3": "GRC",
+      "avg_container_calls_14d": 5.8,
+      "avg_imports_14d": 150176.6,
+      "avg_exports_14d": 33050.8,
       "days_with_data": 5,
       "trend_vs_prior_14d": "stable"
     }
