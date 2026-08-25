@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-25T13:01:37Z",
+  "updated": "2026-08-25T14:53:36Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-11 to 2026-08-25",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -12,6 +12,159 @@
       "avg_exports_14d": 46475.9,
       "days_with_data": 11,
       "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Rotterdam",
+      "ISO3": "NLD",
+      "avg_container_calls_14d": 17.8,
+      "avg_imports_14d": 129121.5,
+      "avg_exports_14d": 149411.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Felixstowe",
+      "ISO3": "GBR",
+      "avg_container_calls_14d": 1.8,
+      "avg_imports_14d": 24643.8,
+      "avg_exports_14d": 23258.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Algeciras",
+      "ISO3": "ESP",
+      "avg_container_calls_14d": 6.9,
+      "avg_imports_14d": 41749.5,
+      "avg_exports_14d": 57502.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Barcelona",
+      "ISO3": "ESP",
+      "avg_container_calls_14d": 4.8,
+      "avg_imports_14d": 25192.0,
+      "avg_exports_14d": 32401.2,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Dubai",
+      "ISO3": "ARE",
+      "avg_container_calls_14d": 0.1,
+      "avg_imports_14d": 0.0,
+      "avg_exports_14d": 198.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Jebel Ali",
+      "ISO3": "ARE",
+      "avg_container_calls_14d": 1.5,
+      "avg_imports_14d": 46024.5,
+      "avg_exports_14d": 21628.8,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Shanghai (Yangshan)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 9.4,
+      "avg_imports_14d": 263142.0,
+      "avg_exports_14d": 582311.7,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Qingdao Port",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 19.1,
+      "avg_imports_14d": 354303.9,
+      "avg_exports_14d": 565823.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Shanghai",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 30.4,
+      "avg_imports_14d": 422392.0,
+      "avg_exports_14d": 381624.8,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Shekou (Shenzhen)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.7,
+      "avg_imports_14d": 11641.6,
+      "avg_exports_14d": 695354.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Tianjin Xin Gang",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 10.3,
+      "avg_imports_14d": 318337.0,
+      "avg_exports_14d": 440665.2,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Xiamen",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 14.6,
+      "avg_imports_14d": 230316.3,
+      "avg_exports_14d": 298572.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Yantian",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.1,
+      "avg_imports_14d": 17444.9,
+      "avg_exports_14d": 102935.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou (Nansha)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 17.2,
+      "avg_imports_14d": 32476.3,
+      "avg_exports_14d": 87360.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou (Huangpu)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 0.7,
+      "avg_imports_14d": 3776.3,
+      "avg_exports_14d": 149.3,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Yokohama",
+      "ISO3": "JPN",
+      "avg_container_calls_14d": 13.5,
+      "avg_imports_14d": 40184.9,
+      "avg_exports_14d": 32534.1,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Manila",
+      "ISO3": "PHL",
+      "avg_container_calls_14d": 6.4,
+      "avg_imports_14d": 37045.4,
+      "avg_exports_14d": 484.0,
+      "days_with_data": 11,
+      "trend_vs_prior_14d": "falling"
     }
   ]
 }
