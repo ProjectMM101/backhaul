@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-25T07:53:50Z",
+  "updated": "2026-08-25T08:52:23Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-11 to 2026-08-25",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -59,69 +59,6 @@
       "trend_vs_prior_14d": "falling"
     },
     {
-      "portname": "Rotterdam",
-      "ISO3": "NLD",
-      "avg_container_calls_14d": 17.8,
-      "avg_imports_14d": 95145.0,
-      "avg_exports_14d": 191425.0,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Hamburg",
-      "ISO3": "DEU",
-      "avg_container_calls_14d": 9.0,
-      "avg_imports_14d": 167682.2,
-      "avg_exports_14d": 127752.5,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Antwerp",
-      "ISO3": "BEL",
-      "avg_container_calls_14d": 12.8,
-      "avg_imports_14d": 158502.0,
-      "avg_exports_14d": 253385.2,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Felixstowe",
-      "ISO3": "GBR",
-      "avg_container_calls_14d": 1.5,
-      "avg_imports_14d": 18706.0,
-      "avg_exports_14d": 14114.8,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Algeciras",
-      "ISO3": "ESP",
-      "avg_container_calls_14d": 6.5,
-      "avg_imports_14d": 47875.2,
-      "avg_exports_14d": 42738.5,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Barcelona",
-      "ISO3": "ESP",
-      "avg_container_calls_14d": 4.2,
-      "avg_imports_14d": 20431.8,
-      "avg_exports_14d": 12285.0,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "falling"
-    },
-    {
-      "portname": "Valencia",
-      "ISO3": "ESP",
-      "avg_container_calls_14d": 9.0,
-      "avg_imports_14d": 79772.8,
-      "avg_exports_14d": 56978.0,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "rising"
-    },
-    {
       "portname": "Dubai",
       "ISO3": "ARE",
       "avg_container_calls_14d": 0.0,
@@ -172,15 +109,6 @@
       "avg_container_calls_14d": 9.8,
       "avg_imports_14d": 28548.2,
       "avg_exports_14d": 29683.5,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Durban",
-      "ISO3": "ZAF",
-      "avg_container_calls_14d": 2.0,
-      "avg_imports_14d": 46016.8,
-      "avg_exports_14d": 24252.8,
       "days_with_data": 4,
       "trend_vs_prior_14d": "stable"
     },
@@ -293,40 +221,22 @@
       "trend_vs_prior_14d": "stable"
     },
     {
-      "portname": "Singapore",
-      "ISO3": "SGP",
-      "avg_container_calls_14d": 35.8,
-      "avg_imports_14d": 844949.8,
-      "avg_exports_14d": 699723.2,
+      "portname": "Port Klang",
+      "ISO3": "MYS",
+      "avg_container_calls_14d": 17.2,
+      "avg_imports_14d": 96366.2,
+      "avg_exports_14d": 88065.2,
       "days_with_data": 4,
       "trend_vs_prior_14d": "stable"
     },
     {
-      "portname": "Singapore - Offshore Oil Terminal 1",
-      "ISO3": "SGP",
-      "avg_container_calls_14d": 0.0,
-      "avg_imports_14d": 0.0,
-      "avg_exports_14d": 0.0,
+      "portname": "Tanjung Pelepas",
+      "ISO3": "MYS",
+      "avg_container_calls_14d": 9.5,
+      "avg_imports_14d": 7072.5,
+      "avg_exports_14d": 10318.8,
       "days_with_data": 4,
       "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Incheon",
-      "ISO3": "KOR",
-      "avg_container_calls_14d": 7.0,
-      "avg_imports_14d": 11918.5,
-      "avg_exports_14d": 3322.8,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Busan",
-      "ISO3": "KOR",
-      "avg_container_calls_14d": 24.0,
-      "avg_imports_14d": 238465.2,
-      "avg_exports_14d": 116684.0,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "falling"
     },
     {
       "portname": "Keelung",
@@ -372,15 +282,6 @@
       "avg_exports_14d": 76189.0,
       "days_with_data": 4,
       "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Chittagong",
-      "ISO3": "BGD",
-      "avg_container_calls_14d": 3.0,
-      "avg_imports_14d": 16757.5,
-      "avg_exports_14d": 155.2,
-      "days_with_data": 4,
-      "trend_vs_prior_14d": "falling"
     },
     {
       "portname": "Laem Chabang",
