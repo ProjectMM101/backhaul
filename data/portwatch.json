@@ -1,45 +1,9 @@
 {
-  "updated": "2026-08-26T03:15:51Z",
+  "updated": "2026-08-26T04:53:52Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-12 to 2026-08-26",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
   "ports": [
-    {
-      "portname": "New York-New Jersey",
-      "ISO3": "USA",
-      "avg_container_calls_14d": 6.0,
-      "avg_imports_14d": 146219.9,
-      "avg_exports_14d": 45300.1,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Houston (US-TX)",
-      "ISO3": "USA",
-      "avg_container_calls_14d": 2.5,
-      "avg_imports_14d": 79479.6,
-      "avg_exports_14d": 33813.6,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Rotterdam",
-      "ISO3": "NLD",
-      "avg_container_calls_14d": 17.8,
-      "avg_imports_14d": 126003.2,
-      "avg_exports_14d": 135794.4,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
-    {
-      "portname": "Hamburg",
-      "ISO3": "DEU",
-      "avg_container_calls_14d": 8.9,
-      "avg_imports_14d": 175738.4,
-      "avg_exports_14d": 98235.1,
-      "days_with_data": 10,
-      "trend_vs_prior_14d": "stable"
-    },
     {
       "portname": "Felixstowe",
       "ISO3": "GBR",
