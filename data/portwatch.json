@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T09:24:33Z",
+  "updated": "2026-08-27T20:16:57Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-13 to 2026-08-27",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
@@ -84,6 +84,24 @@
       "avg_exports_14d": 19581.9,
       "days_with_data": 9,
       "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Mumbai-Jawaharlal Nehru (Nhava Sheva)",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 7.3,
+      "avg_imports_14d": 143810.3,
+      "avg_exports_14d": 139155.6,
+      "days_with_data": 9,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Mundra",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 6.7,
+      "avg_imports_14d": 29638.2,
+      "avg_exports_14d": 37079.0,
+      "days_with_data": 9,
+      "trend_vs_prior_14d": "stable"
     },
     {
       "portname": "Shanghai (Yangshan)",
