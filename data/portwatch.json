@@ -1,15 +1,51 @@
 {
-  "updated": "2026-09-01T14:42:47Z",
+  "updated": "2026-09-01T18:21:00Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-08-18 to 2026-09-01",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
   "ports": [
     {
-      "portname": "Durban",
-      "ISO3": "ZAF",
+      "portname": "Antwerp",
+      "ISO3": "BEL",
+      "avg_container_calls_14d": 12.5,
+      "avg_imports_14d": 276489.5,
+      "avg_exports_14d": 244019.5,
+      "days_with_data": 4,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Chennai (Madras)",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 2.0,
+      "avg_imports_14d": 19716.5,
+      "avg_exports_14d": 1443.8,
+      "days_with_data": 4,
+      "trend_vs_prior_14d": "rising"
+    },
+    {
+      "portname": "Mumbai-Jawaharlal Nehru (Nhava Sheva)",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 7.2,
+      "avg_imports_14d": 150000.2,
+      "avg_exports_14d": 90419.2,
+      "days_with_data": 4,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Mundra",
+      "ISO3": "IND",
+      "avg_container_calls_14d": 6.2,
+      "avg_imports_14d": 47631.0,
+      "avg_exports_14d": 33876.2,
+      "days_with_data": 4,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Mombasa",
+      "ISO3": "KEN",
       "avg_container_calls_14d": 0.8,
-      "avg_imports_14d": 21634.5,
-      "avg_exports_14d": 17209.5,
+      "avg_imports_14d": 9897.5,
+      "avg_exports_14d": 0.0,
       "days_with_data": 4,
       "trend_vs_prior_14d": "falling"
     },
@@ -32,11 +68,11 @@
       "trend_vs_prior_14d": "stable"
     },
     {
-      "portname": "Laem Chabang",
-      "ISO3": "THA",
-      "avg_container_calls_14d": 13.2,
-      "avg_imports_14d": 146847.5,
-      "avg_exports_14d": 115265.5,
+      "portname": "Chittagong",
+      "ISO3": "BGD",
+      "avg_container_calls_14d": 3.5,
+      "avg_imports_14d": 16420.8,
+      "avg_exports_14d": 987.2,
       "days_with_data": 4,
       "trend_vs_prior_14d": "stable"
     }
