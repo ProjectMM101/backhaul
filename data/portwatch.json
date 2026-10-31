@@ -1,18 +1,9 @@
 {
-  "updated": "2026-10-31T05:23:52Z",
+  "updated": "2026-10-31T17:43:02Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-10-17 to 2026-10-31",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
   "ports": [
-    {
-      "portname": "Rotterdam",
-      "ISO3": "NLD",
-      "avg_container_calls_14d": 16.0,
-      "avg_imports_14d": 113411.4,
-      "avg_exports_14d": 120772.9,
-      "days_with_data": 7,
-      "trend_vs_prior_14d": "stable"
-    },
     {
       "portname": "Dubai",
       "ISO3": "ARE",
@@ -37,6 +28,15 @@
       "avg_container_calls_14d": 0.0,
       "avg_imports_14d": 0.0,
       "avg_exports_14d": 0.0,
+      "days_with_data": 7,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Yokohama",
+      "ISO3": "JPN",
+      "avg_container_calls_14d": 9.9,
+      "avg_imports_14d": 44622.9,
+      "avg_exports_14d": 32364.9,
       "days_with_data": 7,
       "trend_vs_prior_14d": "stable"
     }
