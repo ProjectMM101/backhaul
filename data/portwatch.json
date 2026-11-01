@@ -1,15 +1,96 @@
 {
-  "updated": "2026-11-01T01:00:16Z",
+  "updated": "2026-11-01T07:24:11Z",
   "source": "IMF PortWatch (portwatch.imf.org) via ArcGIS REST API \u2014 free, no key required",
   "period": "2026-10-18 to 2026-11-01",
   "note": "avg_container_calls_14d = average daily container vessel calls over the last 14 days. import/export figures are in estimated TEU. Trend compares current 14-day window to the prior 14-day window. Data updated by IMF every Tuesday.",
   "ports": [
     {
-      "portname": "Yokohama",
-      "ISO3": "JPN",
-      "avg_container_calls_14d": 9.8,
-      "avg_imports_14d": 45043.5,
-      "avg_exports_14d": 34310.8,
+      "portname": "Qingdao Port",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 19.3,
+      "avg_imports_14d": 712651.2,
+      "avg_exports_14d": 583417.3,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou (Huangpu)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 1.0,
+      "avg_imports_14d": 1981.7,
+      "avg_exports_14d": 291.3,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Shanghai",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 26.7,
+      "avg_imports_14d": 649668.8,
+      "avg_exports_14d": 299979.2,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Shekou (Shenzhen)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 7.8,
+      "avg_imports_14d": 11013.5,
+      "avg_exports_14d": 604905.7,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Tianjin Xin Gang",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.8,
+      "avg_imports_14d": 726854.7,
+      "avg_exports_14d": 454271.7,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Xiamen",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 12.0,
+      "avg_imports_14d": 96718.7,
+      "avg_exports_14d": 247015.5,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "falling"
+    },
+    {
+      "portname": "Yantian",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 8.5,
+      "avg_imports_14d": 13959.7,
+      "avg_exports_14d": 103169.3,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou (Nansha)",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 15.8,
+      "avg_imports_14d": 35770.0,
+      "avg_exports_14d": 75150.8,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Guangzhou Nansha LNG Terminal",
+      "ISO3": "CHN",
+      "avg_container_calls_14d": 0.0,
+      "avg_imports_14d": 0.0,
+      "avg_exports_14d": 0.0,
+      "days_with_data": 6,
+      "trend_vs_prior_14d": "stable"
+    },
+    {
+      "portname": "Singapore - Offshore Oil Terminal 1",
+      "ISO3": "SGP",
+      "avg_container_calls_14d": 0.0,
+      "avg_imports_14d": 0.0,
+      "avg_exports_14d": 0.0,
       "days_with_data": 6,
       "trend_vs_prior_14d": "stable"
     }
